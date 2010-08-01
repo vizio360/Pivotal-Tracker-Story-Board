@@ -1,0 +1,116 @@
+<html>
+<head>
+<LINK href="css/options.css" rel="stylesheet" type="text/css">
+<title>Pivotal Tracker Story Board Options</title>
+
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options()
+{
+  var token = document.getElementById("XTrackerToken");
+  token = token.value;
+
+  localStorage["storyBoard-X-Tracker-Token"] = token;
+
+  var unstarted = document.getElementById("unstarted");
+  unstarted = unstarted.value;
+  localStorage["storyBoard-unstarted-label"] = unstarted;
+
+  var started = document.getElementById("started");
+  started = started.value;
+  localStorage["storyBoard-started-label"] = started;
+
+  var finished = document.getElementById("finished");
+  finished = finished.value;
+  localStorage["storyBoard-finished-label"] = finished;
+
+  var delivered = document.getElementById("delivered");
+  delivered = delivered.value;
+  localStorage["storyBoard-delivered-label"] = delivered;
+
+
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.style.display = "block";
+  setTimeout(function() {
+    status.style.display = "none";
+  }, 1000);
+
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options()
+{
+	var token = document.getElementById("XTrackerToken");
+	token.value = getLocalStorageValue("storyBoard-X-Tracker-Token");
+
+	var unstarted = document.getElementById("unstarted");
+	unstarted.value = getLocalStorageValue("storyBoard-unstarted-label");
+
+	var started = document.getElementById("started");
+	started.value = getLocalStorageValue("storyBoard-started-label");
+
+	var finished = document.getElementById("finished");
+	finished.value = getLocalStorageValue("storyBoard-finished-label");
+
+	var delivered = document.getElementById("delivered");
+	delivered.value = getLocalStorageValue("storyBoard-delivered-label");
+
+}
+
+function getLocalStorageValue(key)
+{
+	var value = localStorage[key];
+	if (value == undefined)
+		value = "";
+	return value;
+}
+
+</script>
+</head>
+<body onload="restore_options()">
+
+
+<div id="form">
+<table id="optionsTable">
+<tr class="optionRow">
+	<td colspan="4"  class="superTitle">Story Board Options</td>
+</tr>
+<tr class="optionRow">
+	<td colspan="4" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
+</tr>
+<tr class="optionRow">
+	<td colspan="4" class="optionCell content"><input id="XTrackerToken" size="40"></td>
+</tr>
+<tr class="optionRow">
+	<td colspan="4" class="optionCell"><div class="title">Story Board Column Labels</div></td>
+</tr>
+<tr class="optionRow content">
+	<td class="optionCell columnLabel">
+		unstarted<br><input id="unstarted" value="unstarted">
+	</td>
+	<td class="optionCell columnLabel">
+		started<br><input id="started" value="started">
+	</td>
+	<td class="optionCell columnLabel">
+		finished<br><input id="finished" value="finished">
+	</td>
+	<td class="optionCell columnLabel">
+		delivered<br><input id="delivered" value="delivered">
+	</td>
+</tr>
+<tr class="optionRow">
+	<td  colspan="4" class="optionCell buttons">
+	<button id="save" onclick="save_options()">Save</button>
+</td>
+</tr>
+</table>
+<div id="status">
+Options Saved!!!
+</div>
+</div>
+
+</body>
+</html>

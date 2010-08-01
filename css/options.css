@@ -1,0 +1,90 @@
+#form {
+	top:120px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 0px;
+	margin-bottom:0px;
+	position:relative;
+
+	background: #3A92B0;
+	display:block;
+	width:600px;
+	padding:0px;
+	text-align:center;
+	color: #FFFFFF;
+	font-family: Verdana;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 15px;
+	border: 2px solid #D1D1D1;
+}
+
+#optionsTable {
+	display: table;
+	border: 0px;
+	margin:0px;
+	border-spacing:0px;
+	border-collapse: collapse;
+	width:100%;
+}
+.optionRow {
+	display:table-row;
+	width:100%;
+	padding:0px;
+}
+
+.optionCell {
+	display:table-cell;
+	width:100%;
+
+	margin: 0px auto;
+	line-height: 30px;
+	text-align: center;
+	padding:0px;
+}
+
+.superTitle{
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Verdana;
+	text-align: center;
+	font-size: 16px;
+	height: 40px;
+}
+.title {
+	background: #F2F2F2;
+	display: block;
+	color: #000;
+	font-weight: normal;
+	font-size: 12px;
+}
+.content {
+	background: #FFF;
+	height: 70px;
+	font-size:12px;
+}
+.buttons {
+	height: 40px;
+}
+.columnLabel {
+	width:25%;
+}
+
+#status {
+	background: #C4F2C7;
+	font-weight: bold;
+	width: 200px;
+	height: 100px;
+	line-height: 100px;
+	top: 60px;
+	left: 200px;
+	margin: 0px auto;
+	text-size: 14px;
+	text-align: center;
+	color: #000;
+	border-radius: 15px;
+	border: 4px solid #111111;
+	display:none;
+	position:absolute;
+}
+

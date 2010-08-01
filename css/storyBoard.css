@@ -1,0 +1,30 @@
+#title {
+	background: #3A92B0;
+	display:block;
+	width:100%;
+	margin:0px auto;
+	padding:0px;
+	text-align:center;
+	color: #FFFFFF;
+	font-family: Verdana;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 40px;
+
+}
+
+#footer {
+	background: #3A92B0;
+	display:block;
+	width:100%;
+	margin:0px auto;
+	padding:0px;
+	text-align:center;
+	color: #FFFFFF;
+	font-family: Verdana;
+	font-size: 12px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 18px;
+
+}

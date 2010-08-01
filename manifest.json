@@ -1,0 +1,36 @@
+{
+  "name": "Pivotal Story Board",
+  "version": "0.1",
+
+  "description": "Print your story from PivotalTracker!",
+  "icons": { "48": "images/printer48.png",
+             "128": "images/printer128.png"
+           },
+  "background_page": "background.html",
+  "page_action":
+  {
+    "default_icon": "images/printer48.png",
+    "default_title": "Print Stories!"
+  },
+
+  "options_page": "options.html",
+
+  "content_scripts":
+  [
+      {
+         "matches": ["http://www.pivotaltracker.com/*"],
+         "js": ["scripts/content.js"],
+         "run_at": "document_start"
+      }
+  ],
+
+
+  "permissions":
+  [
+    "tabs",
+    "https://www.pivotaltracker.com/*",
+    "http://www.pivotaltracker.com/*"
+
+  ]
+}
+

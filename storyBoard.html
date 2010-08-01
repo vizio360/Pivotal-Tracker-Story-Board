@@ -1,0 +1,432 @@
+<!--
+/**
+ *  The MIT License
+ *
+ *  Copyright (c) 2010 Simone Vicentini
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+ -->
+<html>
+<head>
+<LINK href="css/storyBoard.css" rel="stylesheet" type="text/css">
+<script src="scripts/mootools-1.2.4-core-jm.js"></script>
+<script>
+
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft;
+        _y += el.offsetTop;
+        el = el.parentNode;
+    }
+    return { top: _y, left: _x };
+}
+
+var StoryBoard= new Class({
+	tableContainer:null,
+	tableUniqueRow:null,
+	tableContainerStyle:{
+		width: '100%',
+		padding: '0px',
+		margin: '0px',
+		display: 'table',
+		'border-collapse': 'separate',
+		'border-spacing': '5px 5px'
+	},
+	tableRowStyle:{
+		display: 'table-row',
+		'border-collapse': 'collapse'
+	},
+	tableCellStyle:{
+		display: 'table-cell',
+		'border-collapse': 'collapse',
+		'vertical-align': 'top'
+	},
+	//constructor
+	initialize: function(tableContainerId)
+	{
+
+    	this.tableContainer = document.getElementById(tableContainerId);
+    	this.tableContainer.setStyles(this.tableContainerStyle);
+    	this.tableUniqueRow = this.tableContainer.insertRow(0);
+    	this.tableUniqueRow.setStyles(this.tableRowStyle);
+
+	},
+
+	addStoryColumn: function (sc)
+	{
+		var cell = this.tableUniqueRow.insertCell(this.tableUniqueRow.cells.length);
+		cell.setStyles(this.tableCellStyle);
+		cell.grab(sc.getContent());
+	},
+
+
+});
+
+
+
+var StoryColumn = new Class({
+    //properties
+	title: "",
+
+	divContainer: null,
+
+	divTitle: null,
+
+	divStoriesContainer:null,
+
+	divStoriesSuperContainer:null,
+
+	divSuperContainer:null,
+	divSuperContainerStyle:{
+		width: '25%',
+		height: '100%',
+		display: 'table-cell',
+		margin: '5px',
+		padding: '10px'
+
+	},
+
+
+	divContainerStyle:{
+		background: '#F2F2F2',
+		'min-width': '250px',
+		display: 'block',
+		height: '100%',
+		width: '100%',
+		'border-radius': '10px',
+		border: '2px solid #D1D1D1',
+		padding: '5px'
+
+	},
+
+	divTitleStyle:{
+		width: '100%',
+		height: '40px',
+		background: '#858585',
+		color: '#FFFFFF',
+		'font-family': 'Verdana',
+		'text-align': 'center',
+		'vertical-align': 'middle',
+		'line-height': '40px',
+		display: 'block',
+		'border-top-left-radius': '10px',
+		'border-top-right-radius': '10px'
+
+
+	},
+
+
+	divStoriesContainerStyle:{
+		width: '100%',
+		height: '100%',
+		color: 'red',
+		'font-style': 'italic',
+		'font-weight': 'bold',
+		'font-family': 'Verdana',
+		'text-align': 'center',
+		display: 'block',
+		'overflow-y': 'auto',
+		'overflow-x': 'hidden',
+		position: 'relative',
+		margin: '0px',
+		padding: '0px'
+
+	},
+
+	divStoriesSuperContanerStyle:{
+		height:'750px',
+		display: 'block',
+		margin: '0px',
+		padding: '0px',
+		border: '1px solid #858585'
+	},
+
+
+	//constructor
+	initialize: function()
+	{
+    	this.createColumnDiv();
+    	this.addTitleDiv();
+    	this.addStoriesContainerDiv();
+    	document.addEvent('domready',  this.onWindowResize.bind(this));
+    	window.addEvent('resize', this.onWindowResize.bind(this));
+
+
+	},
+
+	//methods
+	setTitle: function(newTitle)
+	{
+		this.title = newTitle;
+		if (this.divTitle != null)
+			this.divTitle.set('html', this.title);
+
+	},
+
+	createColumnDiv: function()
+	{
+		this.divContainer = new Element('div');
+		this.divContainer.setStyles(this.divContainerStyle);
+		this.divSuperContainer = new Element('div');
+		this.divSuperContainer.setStyles(this.divSuperContainerStyle);
+		this.divSuperContainer.grab(this.divContainer);
+
+	},
+
+	addTitleDiv: function()
+	{
+		this.divTitle = new Element('div');
+		this.divTitle.setStyles(this.divTitleStyle);
+		this.divTitle.set('html', this.title);
+		this.divContainer.grab(this.divTitle);
+	},
+
+
+	addStoriesContainerDiv: function()
+	{
+		this.divStoriesContainer = new Element('div');
+		this.divStoriesContainer.setStyles(this.divStoriesContainerStyle);
+		for (var i = 0; i < 10; i++)
+		{
+			var el = new StoryCard('my first story card vdf  vsdf  sd vsdfv  d fv sdf v s df vs d sdfvdsvdsvdvdfvdvsfvsdvdfv  dsfv sd', 'feature', 'Simone Vicentini', 8);
+			this.divStoriesContainer.grab(el.getContent());
+		}
+
+
+		this.divStoriesSuperContainer = new Element('div');
+		this.divStoriesSuperContainer.setStyles(this.divStoriesSuperContanerStyle);
+		this.divStoriesSuperContainer.grab(this.divStoriesContainer);
+		this.divContainer.grab(this.divStoriesSuperContainer);
+	},
+
+	onWindowResize: function ()
+	{
+		if (this.divStoriesSuperContainer == null)
+			return;
+		var pos = getOffset(this.divStoriesSuperContainer);
+		var newHeight = window.innerHeight - pos.top;
+		this.divStoriesSuperContainer.setStyle('height', newHeight);
+	},
+
+	getContent: function()
+	{
+		return this.divSuperContainer;
+	}
+
+
+
+});
+
+var StoryCard = new Class({
+
+	description: "",
+	type: "",
+	owner: "",
+	points: 0,
+	divContainer:null,
+
+    divContainerStyle:
+    {
+		background: '#FFF',
+		height: "150px",
+		padding: "5px",
+		margin: "5px",
+		'min-width': "200px",
+		'border-radius': '10px',
+		border: '2px solid #D1D1D1',
+		padding: '10px'
+	},
+	divDescription:null,
+
+	divDescriptionStyle:
+	{
+		width: '100%',
+		height: '90%',
+		color: 'black',
+		'font-style': 'normal',
+		'font-weight': 'bold',
+		'font-family': 'Verdana',
+		'text-align': 'left',
+		display: 'block'
+	},
+
+	divOwner:null,
+	divOwnerStyle:
+	{
+		width: '70%',
+		height: '10%',
+		color: 'black',
+		'font-style': 'normal',
+		'font-weight': 'normal',
+		'font-family': 'Verdana',
+		'text-align': 'left',
+		'float': 'left'
+	},
+
+	divTypeAndPointsContainer:null,
+	divTypeAndPointsContainerStyle:
+	{
+		width: '30%',
+		height: '10%',
+		'text-align': 'center',
+		'float': 'right'
+	},
+
+	divTypeContainer:null,
+	divTypeContainerStyle:
+	{
+		width: '50%',
+		height: '100%',
+		'text-align': 'center',
+		'float': 'left'
+	},
+
+	divPointsContainer:null,
+	divPointsContainerStyle:
+	{
+		width: '50%',
+		height: '100%',
+		color: 'black',
+		'font-style': 'italic',
+		'font-weight': 'bold',
+		'font-family': 'Verdana',
+		'text-align': 'right',
+		'float': 'right'
+	},
+
+
+	//constructor
+	initialize: function(description, type, owner, points)
+	{
+    	this.description = description;
+    	this.type = type;
+    	this.owner = owner;
+    	this.points = points;
+		this.createDivContainer();
+		this.createDivDescription();
+		this.createDivOwner();
+		this.createDivTypeAndPoints();
+
+	},
+
+	createDivContainer: function()
+	{
+		this.divContainer = new Element('div');
+		this.divContainer.setStyles(this.divContainerStyle);
+	},
+
+	createDivDescription: function()
+	{
+		this.divDescription = new Element('div');
+		this.divDescription.setStyles(this.divDescriptionStyle);
+		this.divDescription.set('html',this.description);
+		this.divContainer.grab(this.divDescription);
+	},
+
+	createDivOwner: function()
+	{
+		this.divOwner = new Element('div');
+		this.divOwner.setStyles(this.divOwnerStyle);
+		this.divOwner.set('html', this.owner);
+		this.divContainer.grab(this.divOwner);
+	},
+
+
+	createDivTypeAndPoints: function()
+	{
+		this.divTypeAndPointsContainer = new Element('div');
+		this.divTypeAndPointsContainer.setStyles(this.divTypeAndPointsContainerStyle);
+
+		this.divTypeContainer = new Element('div');
+		this.divTypeContainer.setStyles(this.divTypeContainerStyle);
+		this.divTypeAndPointsContainer.grab(this.divTypeContainer);
+
+		var typeIcon = new Element('img');
+		if (this.type == 'feature')
+			typeIcon.src = 'images/feature_icon.png';
+		else if (this.type == 'chore')
+			typeIcon.src = 'images/chore_icon.png';
+		this.divTypeContainer.grab(typeIcon);
+
+
+		this.divPointsContainer = new Element('div');
+		this.divPointsContainer.setStyles(this.divPointsContainerStyle);
+		this.divTypeAndPointsContainer.grab(this.divPointsContainer);
+		this.divPointsContainer.set('html', this.points);
+		this.divContainer.grab(this.divTypeAndPointsContainer);
+
+	},
+
+	getContent: function()
+	{
+		return this.divContainer;
+	}
+
+});
+
+
+</script>
+
+</head>
+<body style="overflow:hidden;line-height:130%;display:block;margin:0px;width:100%;padding:0px">
+
+
+<img id="chore" src="images/chore_icon.png" style="display:none">
+<img id="feature" src="images/feature_icon.png"  style="display:none">
+
+
+<div id="title">
+Project name
+</div>
+
+<div style="display:block;width:100%;margin:0px;padding-bottom:5px;padding-top:5px;line-height:16px">
+<table id="storyBoardTable">
+</table>
+</div>
+<div id="footer">
+<a href="http://blog.vizio360.co.uk">(c) vizio 360 </a>
+</div>
+
+<script>
+var storyBoard = new StoryBoard('storyBoardTable');
+
+
+
+
+var ggg = new StoryColumn();
+ggg.setTitle("Not Started!");
+storyBoard.addStoryColumn(ggg);
+ggg = new StoryColumn();
+ggg.setTitle("Started!");
+storyBoard.addStoryColumn(ggg);
+ggg = new StoryColumn();
+ggg.setTitle("Ready to test!");
+storyBoard.addStoryColumn(ggg);
+ggg = new StoryColumn();
+ggg.setTitle("Ready to accept!");
+storyBoard.addStoryColumn(ggg);
+
+//document.body.appendChild(storyBoard.getContent());
+</script>
+
+</body>
+</html>
