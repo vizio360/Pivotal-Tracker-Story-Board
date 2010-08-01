@@ -486,7 +486,6 @@ function retrieveProjectName()
 function onProjectRetreived()
 {
 	var project = getProjectXmlRequest.responseXML.getElementsByTagName("project");
-	console.log(project);
 	var title = $('title');
 	title.set('html',getTextContentForElement(project[0], "name"));
 }
@@ -504,7 +503,7 @@ var storiesFilter = "state:unstarted,started,finished,delivered";
 var getStoriesXmlRequest;
 function retrieveStories()
 {
-	storyBoard.clear();
+
 	getStoriesXmlRequest = new XMLHttpRequest();
 	getStoriesXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId+"/stories?filter="+storiesFilter, true );
 
@@ -518,12 +517,14 @@ function retrieveStories()
 	}
 	catch (e)
 	{
-		//show Error!!!!!
+		console.log(e);
+		retrieveStories.delay(timeout * 60 * 1000);
 	}
 }
 
 function onStoriesRetreived()
 {
+	storyBoard.clear();
 	var stories = getStoriesXmlRequest.responseXML.getElementsByTagName("story");
 	var i = 0;
 	while (i < stories.length)
