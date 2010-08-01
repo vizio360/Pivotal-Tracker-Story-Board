@@ -29,6 +29,10 @@ function save_options()
   delivered = delivered.value;
   localStorage["storyBoard-delivered-label"] = delivered;
 
+  var timeout = document.getElementById("refreshTimeout");
+  timeout = timeout.children[timeout.selectedIndex].value;
+  localStorage["storyBoard-refreshTimeout"] = timeout;
+
 
 
   // Update status to let user know options were saved.
@@ -57,6 +61,17 @@ function restore_options()
 
 	var delivered = document.getElementById("delivered");
 	delivered.value = getLocalStorageValue("storyBoard-delivered-label");
+
+	var value = getLocalStorageValue("storyBoard-refreshTimeout");
+	var timeout = document.getElementById("refreshTimeout");
+	for (var i = 0; i < timeout.children.length; i++)
+	{
+	    var child = timeout.children[i];
+	    if (child.value == value) {
+	      child.selected = "true";
+	      break;
+	    }
+	}
 
 }
 
@@ -99,6 +114,19 @@ function getLocalStorageValue(key)
 	</td>
 	<td class="optionCell columnLabel">
 		delivered<br><input id="delivered" value="delivered">
+	</td>
+</tr>
+<tr class="optionRow">
+	<td colspan="4" class="optionCell"><div class="title">Refresh Timeout</div></td>
+</tr>
+<tr class="optionRow">
+	<td colspan="4" class="optionCell content">
+		<select id="refreshTimeout">
+			<option value="1">1 minute</option>
+			<option value="15">15 minutes</option>
+			<option value="30">30 minutes</option>
+			<option value="60">1 hour</option>
+		</select>
 	</td>
 </tr>
 <tr class="optionRow">

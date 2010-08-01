@@ -29,6 +29,8 @@
 <script src="scripts/mootools-1.2.4-core-jm.js"></script>
 <script>
 
+
+
 function getOffset( el ) {
     var _x = 0;
     var _y = 0;
@@ -41,6 +43,8 @@ function getOffset( el ) {
 }
 
 var StoryBoard= new Class({
+
+	storyCols: null,
 	tableContainer:null,
 	tableUniqueRow:null,
 	tableContainerStyle:{
@@ -48,6 +52,7 @@ var StoryBoard= new Class({
 		padding: '0px',
 		margin: '0px',
 		display: 'table',
+		'table-layout':'fixed',
 		'border-collapse': 'separate',
 		'border-spacing': '5px 5px'
 	},
@@ -63,7 +68,7 @@ var StoryBoard= new Class({
 	//constructor
 	initialize: function(tableContainerId)
 	{
-
+		this.storyCols = {};
     	this.tableContainer = document.getElementById(tableContainerId);
     	this.tableContainer.setStyles(this.tableContainerStyle);
     	this.tableUniqueRow = this.tableContainer.insertRow(0);
@@ -76,8 +81,16 @@ var StoryBoard= new Class({
 		var cell = this.tableUniqueRow.insertCell(this.tableUniqueRow.cells.length);
 		cell.setStyles(this.tableCellStyle);
 		cell.grab(sc.getContent());
+		this.storyCols[sc.storyState] = sc;
 	},
 
+
+	addStory: function(story)
+	{
+		var col = this.storyCols[story.state];
+		col.addStory(story);
+
+	},
 
 	getLabelForStoryState: function(state)
 	{
@@ -85,6 +98,12 @@ var StoryBoard= new Class({
 		if (label == undefined || label == "")
 			label = state;
 		return label;
+	},
+
+	clear: function()
+	{
+		for (var col in this.storyCols)
+			this.storyCols[col].clear();
 	}
 
 });
@@ -103,6 +122,8 @@ var StoryColumn = new Class({
 
 	divStoriesSuperContainer:null,
 
+	storyState:"",
+
 	divSuperContainer:null,
 	divSuperContainerStyle:{
 		width: '25%',
@@ -110,6 +131,7 @@ var StoryColumn = new Class({
 		display: 'table-cell',
 		margin: '5px',
 		padding: '10px'
+
 
 	},
 
@@ -170,8 +192,9 @@ var StoryColumn = new Class({
 
 
 	//constructor
-	initialize: function()
+	initialize: function(storyState)
 	{
+		this.storyState = storyState;
     	this.createColumnDiv();
     	this.addTitleDiv();
     	this.addStoriesContainerDiv();
@@ -213,17 +236,15 @@ var StoryColumn = new Class({
 	{
 		this.divStoriesContainer = new Element('div');
 		this.divStoriesContainer.setStyles(this.divStoriesContainerStyle);
-		for (var i = 0; i < 10; i++)
-		{
-			var el = new StoryCard('my first story card vdf  vsdf  sd vsdfv  d fv sdf v s df vs d sdfvdsvdsvdvdfvdvsfvsdvdfv  dsfv sd', 'feature', 'Simone Vicentini', 8);
-			this.divStoriesContainer.grab(el.getContent());
-		}
-
-
 		this.divStoriesSuperContainer = new Element('div');
 		this.divStoriesSuperContainer.setStyles(this.divStoriesSuperContanerStyle);
 		this.divStoriesSuperContainer.grab(this.divStoriesContainer);
 		this.divContainer.grab(this.divStoriesSuperContainer);
+	},
+
+	addStory: function(story)
+	{
+		this.divStoriesContainer.grab(story.getContent());
 	},
 
 	onWindowResize: function ()
@@ -233,6 +254,12 @@ var StoryColumn = new Class({
 		var pos = getOffset(this.divStoriesSuperContainer);
 		var newHeight = window.innerHeight - pos.top;
 		this.divStoriesSuperContainer.setStyle('height', newHeight);
+	},
+
+
+	clear: function()
+	{
+		this.divStoriesContainer.empty();
 	},
 
 	getContent: function()
@@ -249,12 +276,13 @@ var StoryCard = new Class({
 	type: "",
 	owner: "",
 	points: 0,
+	state:"",
 	divContainer:null,
 
     divContainerStyle:
     {
 		background: '#FFF',
-		height: "150px",
+		height: "120px",
 		padding: "5px",
 		margin: "5px",
 		'min-width': "200px",
@@ -273,7 +301,8 @@ var StoryCard = new Class({
 		'font-weight': 'bold',
 		'font-family': 'Verdana',
 		'text-align': 'left',
-		display: 'block'
+		display: 'block',
+		'white-space': 'normal'
 	},
 
 	divOwner:null,
@@ -286,7 +315,8 @@ var StoryCard = new Class({
 		'font-weight': 'normal',
 		'font-family': 'Verdana',
 		'text-align': 'left',
-		'float': 'left'
+		'float': 'left',
+		'font-size': '12px'
 	},
 
 	divTypeAndPointsContainer:null,
@@ -322,9 +352,10 @@ var StoryCard = new Class({
 
 
 	//constructor
-	initialize: function(description, type, owner, points)
+	initialize: function(description, state, type, owner, points)
 	{
     	this.description = description;
+    	this.state = state;
     	this.type = type;
     	this.owner = owner;
     	this.points = points;
@@ -339,6 +370,21 @@ var StoryCard = new Class({
 	{
 		this.divContainer = new Element('div');
 		this.divContainer.setStyles(this.divContainerStyle);
+		var bg;
+		switch (this.state)
+		{
+			case "started":
+				bg = "#FCE1E4";
+				break;
+			case "finished":
+				bg = "#FCF6D9";
+				break;
+			case "delivered":
+				bg = "#EAFCD7";
+				break;
+
+		}
+		this.divContainer.setStyle('background', bg);
 	},
 
 	createDivDescription: function()
@@ -391,6 +437,8 @@ var StoryCard = new Class({
 });
 
 
+
+// PROJECT NAME
 function getURLParam(strParamName)
 {
 	var strReturn = "";
@@ -413,10 +461,96 @@ function getURLParam(strParamName)
 }
 
 var projectId = getURLParam('projectId');
+var token = localStorage["storyBoard-X-Tracker-Token"];
+var pivotalTrackerProjectRequest = "http://www.pivotaltracker.com/services/v3/projects/";
+var getProjectXmlRequest;
+function retrieveProjectName()
+{
+	getProjectXmlRequest = new XMLHttpRequest();
+	getProjectXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId, true );
+
+	getProjectXmlRequest.setRequestHeader("X-TrackerToken", token);
+
+	getProjectXmlRequest.onload = onProjectRetreived;
+
+	try
+	{
+		getProjectXmlRequest.send();
+	}
+	catch (e)
+	{
+		//show Error!!!!!
+	}
+}
+
+function onProjectRetreived()
+{
+	var project = getProjectXmlRequest.responseXML.getElementsByTagName("project");
+	console.log(project);
+	var title = $('title');
+	title.set('html',getTextContentForElement(project[0], "name"));
+}
+
+function getTextContentForElement(src, elementTag)
+{
+	var elements = src.getElementsByTagName(elementTag);
+	if (elements.length > 0)
+		return elements[0].textContent;
+	return "";
+}
+//--------------------------
+var pivotalTrackerStoriesRequest = "http://www.pivotaltracker.com/services/v3/projects/";
+var storiesFilter = "state:unstarted,started,finished,delivered";
+var getStoriesXmlRequest;
+function retrieveStories()
+{
+	storyBoard.clear();
+	getStoriesXmlRequest = new XMLHttpRequest();
+	getStoriesXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId+"/stories?filter="+storiesFilter, true );
+
+	getStoriesXmlRequest.setRequestHeader("X-TrackerToken", token);
+
+	getStoriesXmlRequest.onload = onStoriesRetreived;
+
+	try
+	{
+		getStoriesXmlRequest.send();
+	}
+	catch (e)
+	{
+		//show Error!!!!!
+	}
+}
+
+function onStoriesRetreived()
+{
+	var stories = getStoriesXmlRequest.responseXML.getElementsByTagName("story");
+	var i = 0;
+	while (i < stories.length)
+	{
+		var story = stories[i];
+
+		var storyCard = new StoryCard(getTextContentForElement(story, "name"),
+									  getTextContentForElement(story, "current_state"),
+									  getTextContentForElement(story, "story_type"),
+									  getTextContentForElement(story, "owned_by"),
+									  getTextContentForElement(story, "estimate"));
+		storyBoard.addStory(storyCard);
+		i++;
+	}
+
+	var timeout = localStorage["storyBoard-refreshTimeout"];
+	if (timeout == undefined || timeout == "")
+		timeout = 15;
+	retrieveStories.delay(timeout * 60 * 1000);
+}
+
+
+
 </script>
 
 </head>
-<body style="overflow:hidden;line-height:130%;display:block;margin:0px;width:100%;padding:0px">
+<body style="overflow:hidden;line-height:130%;display:block;margin:0px;width:100%;padding:0px;background: #000 url('images/bg_main.gif') repeat 0 1px fixed;">
 
 
 <img id="chore" src="images/chore_icon.png" style="display:none">
@@ -439,25 +573,25 @@ Project name
 var storyBoard = new StoryBoard('storyBoardTable');
 
 
+var unstartedCol = new StoryColumn('unstarted');
+unstartedCol.setTitle(storyBoard.getLabelForStoryState("unstarted"));
+storyBoard.addStoryColumn(unstartedCol);
+
+var startedCol = new StoryColumn('started');
+startedCol.setTitle(storyBoard.getLabelForStoryState("started"));
+storyBoard.addStoryColumn(startedCol);
+
+var finishedCol = new StoryColumn('finished');
+finishedCol.setTitle(storyBoard.getLabelForStoryState("finished"));
+storyBoard.addStoryColumn(finishedCol);
+
+var deliveredCol = new StoryColumn('delivered');
+deliveredCol.setTitle(storyBoard.getLabelForStoryState("delivered"));
+storyBoard.addStoryColumn(deliveredCol);
 
 
-var ggg = new StoryColumn();
-ggg.setTitle(storyBoard.getLabelForStoryState("unstarted"));
-storyBoard.addStoryColumn(ggg);
-
-ggg = new StoryColumn();
-ggg.setTitle(storyBoard.getLabelForStoryState("started"));
-storyBoard.addStoryColumn(ggg);
-
-ggg = new StoryColumn();
-ggg.setTitle(storyBoard.getLabelForStoryState("finished"));
-storyBoard.addStoryColumn(ggg);
-
-ggg = new StoryColumn();
-ggg.setTitle(storyBoard.getLabelForStoryState("delivered"));
-storyBoard.addStoryColumn(ggg);
-
-//document.body.appendChild(storyBoard.getContent());
+retrieveProjectName();
+retrieveStories();
 </script>
 
 </body>
