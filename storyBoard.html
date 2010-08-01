@@ -79,6 +79,14 @@ var StoryBoard= new Class({
 	},
 
 
+	getLabelForStoryState: function(state)
+	{
+		var label = localStorage["storyBoard-"+state+"-label"];
+		if (label == undefined || label == "")
+			label = state;
+		return label;
+	}
+
 });
 
 
@@ -233,7 +241,6 @@ var StoryColumn = new Class({
 	}
 
 
-
 });
 
 var StoryCard = new Class({
@@ -384,6 +391,28 @@ var StoryCard = new Class({
 });
 
 
+function getURLParam(strParamName)
+{
+	var strReturn = "";
+	var strHref = window.location.href;
+	if ( strHref.indexOf("?") > -1 )
+	{
+		var strQueryString = strHref.substr(strHref.indexOf("?")).toLowerCase();
+		var aQueryString = strQueryString.split("&");
+		for ( var iParam = 0; iParam < aQueryString.length; iParam++ )
+		{
+			if (aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1 )
+			{
+			  	var aParam = aQueryString[iParam].split("=");
+		        strReturn = aParam[1];
+		        break;
+		    }
+		}
+	}
+	return unescape(strReturn);
+}
+
+var projectId = getURLParam('projectId');
 </script>
 
 </head>
@@ -413,16 +442,19 @@ var storyBoard = new StoryBoard('storyBoardTable');
 
 
 var ggg = new StoryColumn();
-ggg.setTitle("Not Started!");
+ggg.setTitle(storyBoard.getLabelForStoryState("unstarted"));
 storyBoard.addStoryColumn(ggg);
+
 ggg = new StoryColumn();
-ggg.setTitle("Started!");
+ggg.setTitle(storyBoard.getLabelForStoryState("started"));
 storyBoard.addStoryColumn(ggg);
+
 ggg = new StoryColumn();
-ggg.setTitle("Ready to test!");
+ggg.setTitle(storyBoard.getLabelForStoryState("finished"));
 storyBoard.addStoryColumn(ggg);
+
 ggg = new StoryColumn();
-ggg.setTitle("Ready to accept!");
+ggg.setTitle(storyBoard.getLabelForStoryState("delivered"));
 storyBoard.addStoryColumn(ggg);
 
 //document.body.appendChild(storyBoard.getContent());

@@ -44,9 +44,18 @@ chrome.pageAction.onClicked.addListener(onClicked);
 
 function onClicked(tab)
 {
-	chrome.tabs.create({url:"storyBoard.html"});
+	var projectId = getProjectIdFromUrl(tab.url);
+	chrome.tabs.create({url:"storyBoard.html?projectId="+projectId});
 }
 
+function getProjectIdFromUrl(url)
+{
+	var str = new String(url);
+	str = str.substr(str.lastIndexOf('/')+1);
+	if (str.indexOf('?') > -1)
+		str = str.substring(0, str.indexOf('?'));
+	return str;
+}
 
 
 </script>
