@@ -97,23 +97,23 @@ function getLocalStorageValue(key)
 	<td colspan="4" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell content"><input id="XTrackerToken" size="40"></td>
+	<td colspan="4" class="optionCell content"><input id="XTrackerToken" class="input" size="40"><br>You can find it at the bottom of the "MyProfile" page in Pivotal Tracker.</td>
 </tr>
 <tr class="optionRow">
 	<td colspan="4" class="optionCell"><div class="title">Story Board Column Labels</div></td>
 </tr>
 <tr class="optionRow content">
 	<td class="optionCell columnLabel">
-		unstarted<br><input id="unstarted" value="unstarted">
+		unstarted<br><input id="unstarted" class="input" value="unstarted">
 	</td>
 	<td class="optionCell columnLabel">
-		started<br><input id="started" value="started">
+		started<br><input id="started"  class="input" value="started">
 	</td>
 	<td class="optionCell columnLabel">
-		finished<br><input id="finished" value="finished">
+		finished<br><input id="finished" class="input" value="finished">
 	</td>
 	<td class="optionCell columnLabel">
-		delivered<br><input id="delivered" value="delivered">
+		delivered<br><input id="delivered" class="input" value="delivered">
 	</td>
 </tr>
 <tr class="optionRow">
@@ -121,7 +121,7 @@ function getLocalStorageValue(key)
 </tr>
 <tr class="optionRow">
 	<td colspan="4" class="optionCell content">
-		<select id="refreshTimeout">
+		<select id="refreshTimeout" class="input">
 			<option value="1">1 minute</option>
 			<option value="15">15 minutes</option>
 			<option value="30">30 minutes</option>
@@ -131,7 +131,7 @@ function getLocalStorageValue(key)
 </tr>
 <tr class="optionRow">
 	<td  colspan="4" class="optionCell buttons">
-	<button id="save" onclick="save_options()">Save</button>
+	<button id="save" class="input" onclick="save_options()">Save</button>
 </td>
 </tr>
 </table>

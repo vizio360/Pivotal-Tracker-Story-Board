@@ -1,12 +1,12 @@
 #title {
-	background: #3A92B0;
+	background: #7ec3e5;
 	display:block;
 	width:100%;
 	margin:0px auto;
 	padding:0px;
 	text-align:center;
 	color: #FFFFFF;
-	font-family: Verdana;
+	font-family: Courier New, Verdana;
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
@@ -16,7 +16,7 @@
 }
 
 #footer {
-	background: #3A92B0;
+	background: #7ec3e5;
 	display:block;
 	width:100%;
 	height: 60px;
@@ -24,10 +24,77 @@
 	padding:0px;
 	text-align:center;
 	color: #FFFFFF;
-	font-family: Verdana;
-	font-size: 12px;
+	font-family: Courier New, Verdana;
+	font-size: 14px;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 30px;
+	font-weight: bold;
 
+}
+
+#error {
+	background: #FC95A1;
+	font-weight: bold;
+	width: 300px;
+	line-height: 25px;
+	top: 20px;
+	left: 20px;
+	margin: 0px auto;
+	text-size: 14px;
+	text-align: center;
+	color: #000;
+	border-radius: 15px;
+	border: 4px solid #111111;
+	display:none;
+	position:absolute;
+	font-family: Courier New, Verdana;
+}
+
+a:link {
+ 	color: #FFFFFF;
+ 	text-decoration: none;
+}
+a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:hover {
+	color: #FFFFFF;
+	background-color: #333333;
+	text-decoration: none;
+}
+a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+body {
+	overflow:hidden;
+	line-height:130%;
+	display:block;
+	margin:0px;
+	width:100%;
+	padding:0px;
+	background: #898989 url('../images/bg_main.gif') repeat 0 1px fixed;
+	min-width: 1200px;
+    width:expression(document.body.clientWidth < 1200? "1200px": "auto" );
+}
+
+#loader {
+	background: #7ec3e5;
+	display:none;
+	position: absolute;
+	width: 200px;
+	height: 40px;
+	border-radius: 15px;
+	border: 4px solid #FFFFFF;
+	text-align: center;
+	line-height: 40px;
+}
+#loader_image {
+	display:block;
+	top: 8px;
+	left: 20px;
+	position:relative;
 }

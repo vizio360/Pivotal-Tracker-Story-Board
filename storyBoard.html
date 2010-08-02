@@ -130,7 +130,9 @@ var StoryColumn = new Class({
 		height: '100%',
 		display: 'table-cell',
 		margin: '5px',
-		padding: '10px'
+		'padding-top': '10px',
+		'padding-right': '10px',
+		'padding-left': '2px'
 
 
 	},
@@ -153,17 +155,15 @@ var StoryColumn = new Class({
 		height: '40px',
 		background: '#858585',
 		color: '#FFFFFF',
-		'font-family': 'Verdana',
+		'font-family': 'Courier New, Verdana',
 		'text-align': 'center',
 		'vertical-align': 'middle',
 		'line-height': '40px',
 		display: 'block',
 		'border-top-left-radius': '10px',
-		'border-top-right-radius': '10px'
-
-
+		'border-top-right-radius': '10px',
+		'font-weight': 'bold'
 	},
-
 
 	divStoriesContainerStyle:{
 		width: '100%',
@@ -171,7 +171,7 @@ var StoryColumn = new Class({
 		color: 'red',
 		'font-style': 'italic',
 		'font-weight': 'bold',
-		'font-family': 'Verdana',
+		'font-family': 'Courier New, Verdana',
 		'text-align': 'center',
 		display: 'block',
 		'overflow-y': 'auto',
@@ -299,7 +299,7 @@ var StoryCard = new Class({
 		color: 'black',
 		'font-style': 'normal',
 		'font-weight': 'bold',
-		'font-family': 'Verdana',
+		'font-family': 'Courier New, Verdana',
 		'text-align': 'left',
 		display: 'block',
 		'white-space': 'normal'
@@ -313,7 +313,7 @@ var StoryCard = new Class({
 		color: 'black',
 		'font-style': 'normal',
 		'font-weight': 'normal',
-		'font-family': 'Verdana',
+		'font-family': 'Courier New, Verdana',
 		'text-align': 'left',
 		'float': 'left',
 		'font-size': '12px'
@@ -345,7 +345,7 @@ var StoryCard = new Class({
 		color: 'black',
 		'font-style': 'italic',
 		'font-weight': 'bold',
-		'font-family': 'Verdana',
+		'font-family': 'Courier New, Verdana',
 		'text-align': 'right',
 		'float': 'right'
 	},
@@ -466,25 +466,37 @@ var pivotalTrackerProjectRequest = "http://www.pivotaltracker.com/services/v3/pr
 var getProjectXmlRequest;
 function retrieveProjectName()
 {
-	getProjectXmlRequest = new XMLHttpRequest();
-	getProjectXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId, true );
-
-	getProjectXmlRequest.setRequestHeader("X-TrackerToken", token);
-
-	getProjectXmlRequest.onload = onProjectRetreived;
-
 	try
 	{
+
+		getProjectXmlRequest = new XMLHttpRequest();
+		getProjectXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId, true );
+
+		getProjectXmlRequest.setRequestHeader("X-TrackerToken", token);
+
+		getProjectXmlRequest.onload = onProjectRetreived;
+		getProjectXmlRequest.onerror = onGetProjectXmlRequestError;
+
 		getProjectXmlRequest.send();
 	}
 	catch (e)
 	{
-		//show Error!!!!!
+		showError(e);
 	}
+}
+function onGetProjectXmlRequestError()
+{
+	showError(getStoriesXmlRequest.responseText);
 }
 
 function onProjectRetreived()
 {
+	if (getProjectXmlRequest.status != 200)
+	{
+		showError(getProjectXmlRequest.responseText);
+		return;
+	}
+
 	var project = getProjectXmlRequest.responseXML.getElementsByTagName("project");
 	var title = $('title');
 	title.set('html',getTextContentForElement(project[0], "name"));
@@ -503,27 +515,41 @@ var storiesFilter = "state:unstarted,started,finished,delivered";
 var getStoriesXmlRequest;
 function retrieveStories()
 {
-
-	getStoriesXmlRequest = new XMLHttpRequest();
-	getStoriesXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId+"/stories?filter="+storiesFilter, true );
-
-	getStoriesXmlRequest.setRequestHeader("X-TrackerToken", token);
-
-	getStoriesXmlRequest.onload = onStoriesRetreived;
-
 	try
 	{
+		loaderTimeout = showLoader.delay(500);
+
+		getStoriesXmlRequest = new XMLHttpRequest();
+		getStoriesXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId+"/stories?filter="+storiesFilter, true );
+
+		getStoriesXmlRequest.setRequestHeader("X-TrackerToken", token);
+
+		getStoriesXmlRequest.onload = onStoriesRetreived;
+		getStoriesXmlRequest.onerror = onGetStoriesXmlRequestError;
+
 		getStoriesXmlRequest.send();
 	}
 	catch (e)
 	{
 		console.log(e);
-		retrieveStories.delay(timeout * 60 * 1000);
+		showError(e);
 	}
+}
+function onGetStoriesXmlRequestError()
+{
+	hideLoader();
+	showError(getStoriesXmlRequest.responseText);
 }
 
 function onStoriesRetreived()
 {
+	hideLoader();
+	if (getStoriesXmlRequest.status != 200)
+	{
+		showError(getStoriesXmlRequest.responseText);
+		return;
+	}
+
 	storyBoard.clear();
 	var stories = getStoriesXmlRequest.responseXML.getElementsByTagName("story");
 	var i = 0;
@@ -546,28 +572,78 @@ function onStoriesRetreived()
 	retrieveStories.delay(timeout * 60 * 1000);
 }
 
+var errorSuggestions = "<br>Have you set the API Token in the <a href='options.html'>option page</a> of the extension?<br>";
+function showError(message)
+{
+	// Update status to let user know options were saved.
+	var error = $('error');
+	error.style.display = "block";
+	error.set('html', message + errorSuggestions);
+	window.addEvent('resize',  centerError);
+	centerError();
+}
+
+function centerError()
+{
+	var error = $('error');
+	var size = error.getSize();
+	error.setStyle('top', (window.innerHeight - size.y)/2);
+	error.setStyle('left', (window.innerWidth - size.x)/2);
+}
+
+
+var loaderTimeout;
+function showLoader()
+{
+	var loader = $('loader');
+	loader.style.display = "block";
+	window.addEvent('resize',  centerLoader);
+	centerLoader();
+}
+
+function centerLoader()
+{
+	var loader = $('loader');
+	var size = loader.getSize();
+	loader.setStyle('top', (window.innerHeight - size.y)/2);
+	loader.setStyle('left', (window.innerWidth - size.x)/2);
+}
+
+function hideLoader()
+{
+	$clear(loaderTimeout);
+	var loader = $('loader');
+	loader.style.display = "none";
+}
 
 
 </script>
 
 </head>
-<body style="overflow:hidden;line-height:130%;display:block;margin:0px;width:100%;padding:0px;background: #000 url('images/bg_main.gif') repeat 0 1px fixed;">
+<body>
 
 
 <img id="chore" src="images/chore_icon.png" style="display:none">
 <img id="feature" src="images/feature_icon.png"  style="display:none">
 
 
+
 <div id="title">
 Project name
 </div>
 
-<div style="display:block;width:100%;margin:0px;padding-bottom:5px;padding-top:5px;line-height:16px">
+<div style="display:block;width:100%;margin:0px;padding:0px;line-height:16px">
 <table id="storyBoardTable">
 </table>
 </div>
 <div id="footer">
-<a href="http://blog.vizio360.co.uk">(c) vizio 360 </a>
+<a href="http://blog.vizio360.co.uk" target="_blank">&nbsp&nbsp© 2010 vizio 360&nbsp&nbsp</a>
+</div>
+<div id="loader">
+	<img id="loader_image" src="images/loader.gif">
+</div>
+<div id="error">
+Error!
 </div>
 
 <script>
