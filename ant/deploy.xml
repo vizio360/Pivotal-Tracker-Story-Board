@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="PivotalStoryPrinter" default="deploy" basedir="../">
+<project name="PivotalStoryBoard" default="deploy" basedir="../">
     <input message="enter version" addproperty="project.version"/>
 
     <property name="output" value="../published/${project.version}"/>
-    <property name="client" value="PivotalStoryPrinter"/>
+    <property name="client" value="PivotalStoryBoard"/>
 
 
     <target name="clean">

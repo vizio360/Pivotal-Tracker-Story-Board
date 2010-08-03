@@ -1,8 +1,8 @@
 {
   "name": "Pivotal Story Board",
-  "version": "0.1",
+  "version": "1.0",
 
-  "description": "Print your story from PivotalTracker!",
+  "description": "Keep an eye on the current iteration!",
   "icons": { "48": "images/printer48.png",
              "128": "images/printer128.png"
            },
@@ -10,11 +10,9 @@
   "page_action":
   {
     "default_icon": "images/printer48.png",
-    "default_title": "Print Stories!"
+    "default_title": "Story Board"
   },
-
   "options_page": "options.html",
-
   "content_scripts":
   [
       {
@@ -23,8 +21,6 @@
          "run_at": "document_start"
       }
   ],
-
-
   "permissions":
   [
     "tabs",

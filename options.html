@@ -47,40 +47,40 @@ function save_options()
 // Restores select box state to saved value from localStorage.
 function restore_options()
 {
-	var token = document.getElementById("XTrackerToken");
-	token.value = getLocalStorageValue("storyBoard-X-Tracker-Token");
+    var token = document.getElementById("XTrackerToken");
+    token.value = getLocalStorageValue("storyBoard-X-Tracker-Token");
 
-	var unstarted = document.getElementById("unstarted");
-	unstarted.value = getLocalStorageValue("storyBoard-unstarted-label");
+    var unstarted = document.getElementById("unstarted");
+    unstarted.value = getLocalStorageValue("storyBoard-unstarted-label");
 
-	var started = document.getElementById("started");
-	started.value = getLocalStorageValue("storyBoard-started-label");
+    var started = document.getElementById("started");
+    started.value = getLocalStorageValue("storyBoard-started-label");
 
-	var finished = document.getElementById("finished");
-	finished.value = getLocalStorageValue("storyBoard-finished-label");
+    var finished = document.getElementById("finished");
+    finished.value = getLocalStorageValue("storyBoard-finished-label");
 
-	var delivered = document.getElementById("delivered");
-	delivered.value = getLocalStorageValue("storyBoard-delivered-label");
+    var delivered = document.getElementById("delivered");
+    delivered.value = getLocalStorageValue("storyBoard-delivered-label");
 
-	var value = getLocalStorageValue("storyBoard-refreshTimeout");
-	var timeout = document.getElementById("refreshTimeout");
-	for (var i = 0; i < timeout.children.length; i++)
-	{
-	    var child = timeout.children[i];
-	    if (child.value == value) {
-	      child.selected = "true";
-	      break;
-	    }
-	}
+    var value = getLocalStorageValue("storyBoard-refreshTimeout");
+    var timeout = document.getElementById("refreshTimeout");
+    for (var i = 0; i < timeout.children.length; i++)
+    {
+        var child = timeout.children[i];
+        if (child.value == value) {
+          child.selected = "true";
+          break;
+        }
+    }
 
 }
 
 function getLocalStorageValue(key)
 {
-	var value = localStorage[key];
-	if (value == undefined)
-		value = "";
-	return value;
+    var value = localStorage[key];
+    if (value == undefined)
+        value = "";
+    return value;
 }
 
 </script>
@@ -91,47 +91,47 @@ function getLocalStorageValue(key)
 <div id="form">
 <table id="optionsTable">
 <tr class="optionRow">
-	<td colspan="4"  class="superTitle">Story Board Options</td>
+    <td colspan="4"  class="superTitle">Story Board Options</td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
+    <td colspan="4" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell content"><input id="XTrackerToken" class="input" size="40"><br>You can find it at the bottom of the "MyProfile" page in Pivotal Tracker.</td>
+    <td colspan="4" class="optionCell content"><input id="XTrackerToken" class="input" size="40"><br>You can find it at the bottom of the "MyProfile" page in Pivotal Tracker.</td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell"><div class="title">Story Board Column Labels</div></td>
+    <td colspan="4" class="optionCell"><div class="title">Story Board Column Labels</div></td>
 </tr>
 <tr class="optionRow content">
-	<td class="optionCell columnLabel">
-		unstarted<br><input id="unstarted" class="input" value="unstarted">
-	</td>
-	<td class="optionCell columnLabel">
-		started<br><input id="started"  class="input" value="started">
-	</td>
-	<td class="optionCell columnLabel">
-		finished<br><input id="finished" class="input" value="finished">
-	</td>
-	<td class="optionCell columnLabel">
-		delivered<br><input id="delivered" class="input" value="delivered">
-	</td>
+    <td class="optionCell columnLabel">
+        unstarted<br><input id="unstarted" class="input" value="unstarted" size="15">
+    </td>
+    <td class="optionCell columnLabel">
+        started<br><input id="started"  class="input" value="started" size="15">
+    </td>
+    <td class="optionCell columnLabel">
+        finished<br><input id="finished" class="input" value="finished" size="15">
+    </td>
+    <td class="optionCell columnLabel">
+        delivered<br><input id="delivered" class="input" value="delivered" size="15">
+    </td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell"><div class="title">Refresh Timeout</div></td>
+    <td colspan="4" class="optionCell"><div class="title">Refresh Timeout</div></td>
 </tr>
 <tr class="optionRow">
-	<td colspan="4" class="optionCell content">
-		<select id="refreshTimeout" class="input">
-			<option value="1">1 minute</option>
-			<option value="15">15 minutes</option>
-			<option value="30">30 minutes</option>
-			<option value="60">1 hour</option>
-		</select>
-	</td>
+    <td colspan="4" class="optionCell content">
+        <select id="refreshTimeout" class="input">
+            <option value="1">1 minute</option>
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+        </select>
+    </td>
 </tr>
 <tr class="optionRow">
-	<td  colspan="4" class="optionCell buttons">
-	<button id="save" class="input" onclick="save_options()">Save</button>
+    <td  colspan="4" class="optionCell buttons">
+    <button id="save" class="input" onclick="save_options()">Save</button>
 </td>
 </tr>
 </table>

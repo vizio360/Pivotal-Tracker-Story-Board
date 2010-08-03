@@ -25,10 +25,16 @@
  -->
 <html>
 <head>
+<title>Pivotal Tracker Story Board</title>
 <LINK href="css/storyBoard.css" rel="stylesheet" type="text/css">
 <script src="scripts/mootools-1.2.4-core-jm.js"></script>
+<script src="scripts/StoryBoard.js"></script>
+<script src="scripts/StoryColumn.js"></script>
+<script src="scripts/StoryCard.js"></script>
+<script src="scripts/ErrorDialog.js"></script>
+<script src="scripts/Loader.js"></script>
+<script src="scripts/PivotalTrackerAPIClient.js"></script>
 <script>
-
 
 
 function getOffset( el ) {
@@ -42,580 +48,89 @@ function getOffset( el ) {
     return { top: _y, left: _x };
 }
 
-var StoryBoard= new Class({
-
-	storyCols: null,
-	tableContainer:null,
-	tableUniqueRow:null,
-	tableContainerStyle:{
-		width: '100%',
-		padding: '0px',
-		margin: '0px',
-		display: 'table',
-		'table-layout':'fixed',
-		'border-collapse': 'separate',
-		'border-spacing': '5px 5px'
-	},
-	tableRowStyle:{
-		display: 'table-row',
-		'border-collapse': 'collapse'
-	},
-	tableCellStyle:{
-		display: 'table-cell',
-		'border-collapse': 'collapse',
-		'vertical-align': 'top'
-	},
-	//constructor
-	initialize: function(tableContainerId)
-	{
-		this.storyCols = {};
-    	this.tableContainer = document.getElementById(tableContainerId);
-    	this.tableContainer.setStyles(this.tableContainerStyle);
-    	this.tableUniqueRow = this.tableContainer.insertRow(0);
-    	this.tableUniqueRow.setStyles(this.tableRowStyle);
-
-	},
-
-	addStoryColumn: function (sc)
-	{
-		var cell = this.tableUniqueRow.insertCell(this.tableUniqueRow.cells.length);
-		cell.setStyles(this.tableCellStyle);
-		cell.grab(sc.getContent());
-		this.storyCols[sc.storyState] = sc;
-	},
-
-
-	addStory: function(story)
-	{
-		var col = this.storyCols[story.state];
-		col.addStory(story);
-
-	},
-
-	getLabelForStoryState: function(state)
-	{
-		var label = localStorage["storyBoard-"+state+"-label"];
-		if (label == undefined || label == "")
-			label = state;
-		return label;
-	},
-
-	clear: function()
-	{
-		for (var col in this.storyCols)
-			this.storyCols[col].clear();
-	}
-
-});
-
-
-
-var StoryColumn = new Class({
-    //properties
-	title: "",
-
-	divContainer: null,
-
-	divTitle: null,
-
-	divStoriesContainer:null,
-
-	divStoriesSuperContainer:null,
-
-	storyState:"",
-
-	divSuperContainer:null,
-	divSuperContainerStyle:{
-		width: '25%',
-		height: '100%',
-		display: 'table-cell',
-		margin: '5px',
-		'padding-top': '10px',
-		'padding-right': '10px',
-		'padding-left': '2px'
-
-
-	},
-
-
-	divContainerStyle:{
-		background: '#F2F2F2',
-		'min-width': '250px',
-		display: 'block',
-		height: '100%',
-		width: '100%',
-		'border-radius': '10px',
-		border: '2px solid #D1D1D1',
-		padding: '5px'
-
-	},
-
-	divTitleStyle:{
-		width: '100%',
-		height: '40px',
-		background: '#858585',
-		color: '#FFFFFF',
-		'font-family': 'Courier New, Verdana',
-		'text-align': 'center',
-		'vertical-align': 'middle',
-		'line-height': '40px',
-		display: 'block',
-		'border-top-left-radius': '10px',
-		'border-top-right-radius': '10px',
-		'font-weight': 'bold'
-	},
-
-	divStoriesContainerStyle:{
-		width: '100%',
-		height: '100%',
-		color: 'red',
-		'font-style': 'italic',
-		'font-weight': 'bold',
-		'font-family': 'Courier New, Verdana',
-		'text-align': 'center',
-		display: 'block',
-		'overflow-y': 'auto',
-		'overflow-x': 'hidden',
-		position: 'relative',
-		margin: '0px',
-		padding: '0px'
-
-	},
-
-	divStoriesSuperContanerStyle:{
-		height:'750px',
-		display: 'block',
-		margin: '0px',
-		padding: '0px',
-		border: '1px solid #858585'
-	},
-
-
-	//constructor
-	initialize: function(storyState)
-	{
-		this.storyState = storyState;
-    	this.createColumnDiv();
-    	this.addTitleDiv();
-    	this.addStoriesContainerDiv();
-    	document.addEvent('domready',  this.onWindowResize.bind(this));
-    	window.addEvent('resize', this.onWindowResize.bind(this));
-
-
-	},
-
-	//methods
-	setTitle: function(newTitle)
-	{
-		this.title = newTitle;
-		if (this.divTitle != null)
-			this.divTitle.set('html', this.title);
-
-	},
-
-	createColumnDiv: function()
-	{
-		this.divContainer = new Element('div');
-		this.divContainer.setStyles(this.divContainerStyle);
-		this.divSuperContainer = new Element('div');
-		this.divSuperContainer.setStyles(this.divSuperContainerStyle);
-		this.divSuperContainer.grab(this.divContainer);
-
-	},
-
-	addTitleDiv: function()
-	{
-		this.divTitle = new Element('div');
-		this.divTitle.setStyles(this.divTitleStyle);
-		this.divTitle.set('html', this.title);
-		this.divContainer.grab(this.divTitle);
-	},
-
-
-	addStoriesContainerDiv: function()
-	{
-		this.divStoriesContainer = new Element('div');
-		this.divStoriesContainer.setStyles(this.divStoriesContainerStyle);
-		this.divStoriesSuperContainer = new Element('div');
-		this.divStoriesSuperContainer.setStyles(this.divStoriesSuperContanerStyle);
-		this.divStoriesSuperContainer.grab(this.divStoriesContainer);
-		this.divContainer.grab(this.divStoriesSuperContainer);
-	},
-
-	addStory: function(story)
-	{
-		this.divStoriesContainer.grab(story.getContent());
-	},
-
-	onWindowResize: function ()
-	{
-		if (this.divStoriesSuperContainer == null)
-			return;
-		var pos = getOffset(this.divStoriesSuperContainer);
-		var newHeight = window.innerHeight - pos.top;
-		this.divStoriesSuperContainer.setStyle('height', newHeight);
-	},
-
-
-	clear: function()
-	{
-		this.divStoriesContainer.empty();
-	},
-
-	getContent: function()
-	{
-		return this.divSuperContainer;
-	}
-
-
-});
-
-var StoryCard = new Class({
-
-	description: "",
-	type: "",
-	owner: "",
-	points: 0,
-	state:"",
-	divContainer:null,
-
-    divContainerStyle:
-    {
-		background: '#FFF',
-		height: "120px",
-		padding: "5px",
-		margin: "5px",
-		'min-width': "200px",
-		'border-radius': '10px',
-		border: '2px solid #D1D1D1',
-		padding: '10px'
-	},
-	divDescription:null,
-
-	divDescriptionStyle:
-	{
-		width: '100%',
-		height: '90%',
-		color: 'black',
-		'font-style': 'normal',
-		'font-weight': 'bold',
-		'font-family': 'Courier New, Verdana',
-		'text-align': 'left',
-		display: 'block',
-		'white-space': 'normal'
-	},
-
-	divOwner:null,
-	divOwnerStyle:
-	{
-		width: '70%',
-		height: '10%',
-		color: 'black',
-		'font-style': 'normal',
-		'font-weight': 'normal',
-		'font-family': 'Courier New, Verdana',
-		'text-align': 'left',
-		'float': 'left',
-		'font-size': '12px'
-	},
-
-	divTypeAndPointsContainer:null,
-	divTypeAndPointsContainerStyle:
-	{
-		width: '30%',
-		height: '10%',
-		'text-align': 'center',
-		'float': 'right'
-	},
-
-	divTypeContainer:null,
-	divTypeContainerStyle:
-	{
-		width: '50%',
-		height: '100%',
-		'text-align': 'center',
-		'float': 'left'
-	},
-
-	divPointsContainer:null,
-	divPointsContainerStyle:
-	{
-		width: '50%',
-		height: '100%',
-		color: 'black',
-		'font-style': 'italic',
-		'font-weight': 'bold',
-		'font-family': 'Courier New, Verdana',
-		'text-align': 'right',
-		'float': 'right'
-	},
-
-
-	//constructor
-	initialize: function(description, state, type, owner, points)
-	{
-    	this.description = description;
-    	this.state = state;
-    	this.type = type;
-    	this.owner = owner;
-    	this.points = points;
-		this.createDivContainer();
-		this.createDivDescription();
-		this.createDivOwner();
-		this.createDivTypeAndPoints();
-
-	},
-
-	createDivContainer: function()
-	{
-		this.divContainer = new Element('div');
-		this.divContainer.setStyles(this.divContainerStyle);
-		var bg;
-		switch (this.state)
-		{
-			case "started":
-				bg = "#FCE1E4";
-				break;
-			case "finished":
-				bg = "#FCF6D9";
-				break;
-			case "delivered":
-				bg = "#EAFCD7";
-				break;
-
-		}
-		this.divContainer.setStyle('background', bg);
-	},
-
-	createDivDescription: function()
-	{
-		this.divDescription = new Element('div');
-		this.divDescription.setStyles(this.divDescriptionStyle);
-		this.divDescription.set('html',this.description);
-		this.divContainer.grab(this.divDescription);
-	},
-
-	createDivOwner: function()
-	{
-		this.divOwner = new Element('div');
-		this.divOwner.setStyles(this.divOwnerStyle);
-		this.divOwner.set('html', this.owner);
-		this.divContainer.grab(this.divOwner);
-	},
-
-
-	createDivTypeAndPoints: function()
-	{
-		this.divTypeAndPointsContainer = new Element('div');
-		this.divTypeAndPointsContainer.setStyles(this.divTypeAndPointsContainerStyle);
-
-		this.divTypeContainer = new Element('div');
-		this.divTypeContainer.setStyles(this.divTypeContainerStyle);
-		this.divTypeAndPointsContainer.grab(this.divTypeContainer);
-
-		var typeIcon = new Element('img');
-		if (this.type == 'feature')
-			typeIcon.src = 'images/feature_icon.png';
-		else if (this.type == 'chore')
-			typeIcon.src = 'images/chore_icon.png';
-		this.divTypeContainer.grab(typeIcon);
-
-
-		this.divPointsContainer = new Element('div');
-		this.divPointsContainer.setStyles(this.divPointsContainerStyle);
-		this.divTypeAndPointsContainer.grab(this.divPointsContainer);
-		this.divPointsContainer.set('html', this.points);
-		this.divContainer.grab(this.divTypeAndPointsContainer);
-
-	},
-
-	getContent: function()
-	{
-		return this.divContainer;
-	}
-
-});
-
-
-
-// PROJECT NAME
 function getURLParam(strParamName)
 {
-	var strReturn = "";
-	var strHref = window.location.href;
-	if ( strHref.indexOf("?") > -1 )
-	{
-		var strQueryString = strHref.substr(strHref.indexOf("?")).toLowerCase();
-		var aQueryString = strQueryString.split("&");
-		for ( var iParam = 0; iParam < aQueryString.length; iParam++ )
-		{
-			if (aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1 )
-			{
-			  	var aParam = aQueryString[iParam].split("=");
-		        strReturn = aParam[1];
-		        break;
-		    }
-		}
-	}
-	return unescape(strReturn);
+    var strReturn = "";
+    var strHref = window.location.href;
+    if ( strHref.indexOf("?") > -1 )
+    {
+        var strQueryString = strHref.substr(strHref.indexOf("?")).toLowerCase();
+        var aQueryString = strQueryString.split("&");
+        for ( var iParam = 0; iParam < aQueryString.length; iParam++ )
+        {
+            if (aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1 )
+            {
+                  var aParam = aQueryString[iParam].split("=");
+                strReturn = aParam[1];
+                break;
+            }
+        }
+    }
+    return unescape(strReturn);
 }
 
-var projectId = getURLParam('projectId');
-var token = localStorage["storyBoard-X-Tracker-Token"];
-var pivotalTrackerProjectRequest = "http://www.pivotaltracker.com/services/v3/projects/";
-var getProjectXmlRequest;
-function retrieveProjectName()
+function onProjectLoaded(responseText, responseXML)
 {
-	try
-	{
-
-		getProjectXmlRequest = new XMLHttpRequest();
-		getProjectXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId, true );
-
-		getProjectXmlRequest.setRequestHeader("X-TrackerToken", token);
-
-		getProjectXmlRequest.onload = onProjectRetreived;
-		getProjectXmlRequest.onerror = onGetProjectXmlRequestError;
-
-		getProjectXmlRequest.send();
-	}
-	catch (e)
-	{
-		showError(e);
-	}
-}
-function onGetProjectXmlRequestError()
-{
-	showError(getStoriesXmlRequest.responseText);
+    loader.hideLoader();
+    var project = responseXML.getElementsByTagName("project");
+    var title = $('title');
+    title.set('html',getTextContentForElement(project[0], "name"));
 }
 
-function onProjectRetreived()
-{
-	if (getProjectXmlRequest.status != 200)
-	{
-		showError(getProjectXmlRequest.responseText);
-		return;
-	}
 
-	var project = getProjectXmlRequest.responseXML.getElementsByTagName("project");
-	var title = $('title');
-	title.set('html',getTextContentForElement(project[0], "name"));
+
+function onRequestStart()
+{
+    loader.showLoader();
+}
+
+function onXmlRequestError(xhr)
+{
+    var message = "OOPS!! Something went wrong!<BR>";
+    if (xhr.responseText != undefined)
+        message += xhr.responseText + "<BR>";
+    message += "STATUS: "+xhr.status;
+    errorDialog.showError(message);
+}
+
+function onStoriesLoaded(responseText, responseXML)
+{
+    loader.hideLoader();
+    storyBoard.clear();
+    var stories = responseXML.getElementsByTagName("story");
+    var i = 0;
+    while (i < stories.length)
+    {
+        var story = stories[i];
+
+        var storyCard = new StoryCard(getTextContentForElement(story, "name"),
+                                      getTextContentForElement(story, "current_state"),
+                                      getTextContentForElement(story, "story_type"),
+                                      getTextContentForElement(story, "owned_by"),
+                                      getTextContentForElement(story, "estimate"));
+        storyBoard.addStory(storyCard);
+        i++;
+    }
+
+    var timeout = localStorage["storyBoard-refreshTimeout"];
+    if (timeout == undefined || timeout == "")
+        timeout = 15;
+
+    startStoriesTimer.bind(document).delay(timeout * 60 * 1000);
+}
+
+function startStoriesTimer()
+{
+    pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
 }
 
 function getTextContentForElement(src, elementTag)
 {
-	var elements = src.getElementsByTagName(elementTag);
-	if (elements.length > 0)
-		return elements[0].textContent;
-	return "";
+    var elements = src.getElementsByTagName(elementTag);
+    if (elements.length > 0)
+        return elements[0].textContent;
+    return "";
 }
-//--------------------------
-var pivotalTrackerStoriesRequest = "http://www.pivotaltracker.com/services/v3/projects/";
-var storiesFilter = "state:unstarted,started,finished,delivered";
-var getStoriesXmlRequest;
-function retrieveStories()
-{
-	try
-	{
-		loaderTimeout = showLoader.delay(500);
-
-		getStoriesXmlRequest = new XMLHttpRequest();
-		getStoriesXmlRequest.open( "get", pivotalTrackerProjectRequest+projectId+"/stories?filter="+storiesFilter, true );
-
-		getStoriesXmlRequest.setRequestHeader("X-TrackerToken", token);
-
-		getStoriesXmlRequest.onload = onStoriesRetreived;
-		getStoriesXmlRequest.onerror = onGetStoriesXmlRequestError;
-
-		getStoriesXmlRequest.send();
-	}
-	catch (e)
-	{
-		console.log(e);
-		showError(e);
-	}
-}
-function onGetStoriesXmlRequestError()
-{
-	hideLoader();
-	showError(getStoriesXmlRequest.responseText);
-}
-
-function onStoriesRetreived()
-{
-	hideLoader();
-	if (getStoriesXmlRequest.status != 200)
-	{
-		showError(getStoriesXmlRequest.responseText);
-		return;
-	}
-
-	storyBoard.clear();
-	var stories = getStoriesXmlRequest.responseXML.getElementsByTagName("story");
-	var i = 0;
-	while (i < stories.length)
-	{
-		var story = stories[i];
-
-		var storyCard = new StoryCard(getTextContentForElement(story, "name"),
-									  getTextContentForElement(story, "current_state"),
-									  getTextContentForElement(story, "story_type"),
-									  getTextContentForElement(story, "owned_by"),
-									  getTextContentForElement(story, "estimate"));
-		storyBoard.addStory(storyCard);
-		i++;
-	}
-
-	var timeout = localStorage["storyBoard-refreshTimeout"];
-	if (timeout == undefined || timeout == "")
-		timeout = 15;
-	retrieveStories.delay(timeout * 60 * 1000);
-}
-
-var errorSuggestions = "<br>Have you set the API Token in the <a href='options.html'>option page</a> of the extension?<br>";
-function showError(message)
-{
-	// Update status to let user know options were saved.
-	var error = $('error');
-	error.style.display = "block";
-	error.set('html', message + errorSuggestions);
-	window.addEvent('resize',  centerError);
-	centerError();
-}
-
-function centerError()
-{
-	var error = $('error');
-	var size = error.getSize();
-	error.setStyle('top', (window.innerHeight - size.y)/2);
-	error.setStyle('left', (window.innerWidth - size.x)/2);
-}
-
-
-var loaderTimeout;
-function showLoader()
-{
-	var loader = $('loader');
-	loader.style.display = "block";
-	window.addEvent('resize',  centerLoader);
-	centerLoader();
-}
-
-function centerLoader()
-{
-	var loader = $('loader');
-	var size = loader.getSize();
-	loader.setStyle('top', (window.innerHeight - size.y)/2);
-	loader.setStyle('left', (window.innerWidth - size.x)/2);
-}
-
-function hideLoader()
-{
-	$clear(loaderTimeout);
-	var loader = $('loader');
-	loader.style.display = "none";
-}
-
 
 </script>
 
@@ -640,13 +155,20 @@ Project name
 <a href="http://blog.vizio360.co.uk" target="_blank">&nbsp&nbsp© 2010 vizio 360&nbsp&nbsp</a>
 </div>
 <div id="loader">
-	<img id="loader_image" src="images/loader.gif">
+    <img id="loader_image" src="images/loader.gif">
 </div>
 <div id="error">
 Error!
 </div>
 
 <script>
+
+var errorDialog = new ErrorDialog($('error'));
+var errorSuggestions = "<br>Have you set the API Token in the <a href='options.html' target='_blank'>option page</a> of the extension?<br>";
+
+var loader = new Loader($('loader'), 500);
+
+
 var storyBoard = new StoryBoard('storyBoardTable');
 
 
@@ -667,8 +189,13 @@ deliveredCol.setTitle(storyBoard.getLabelForStoryState("delivered"));
 storyBoard.addStoryColumn(deliveredCol);
 
 
-retrieveProjectName();
-retrieveStories();
+var token = localStorage["storyBoard-X-Tracker-Token"];
+var pivotalClient = new PivotalTrackerAPIClient(token);
+var projectId = getURLParam('projectId');
+pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
+var storiesFilter = "filter=state:unstarted,started,finished,delivered";
+pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
+
 </script>
 
 </body>
