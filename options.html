@@ -63,6 +63,8 @@ function restore_options()
     delivered.value = getLocalStorageValue("storyBoard-delivered-label");
 
     var value = getLocalStorageValue("storyBoard-refreshTimeout");
+    if (value == "" || value == null || value == undefined)
+        value = 15;
     var timeout = document.getElementById("refreshTimeout");
     for (var i = 0; i < timeout.children.length; i++)
     {

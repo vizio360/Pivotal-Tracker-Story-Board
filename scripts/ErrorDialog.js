@@ -24,28 +24,28 @@
 
 var ErrorDialog = new Class({
 
-	divContainer:null,
+    divContainer:null,
 
-	initialize: function(divContainer)
-	{
-		this.divContainer = divContainer;
-	},
+    initialize: function(divContainer)
+    {
+        this.divContainer = divContainer;
+    },
 
-	showError: function(message)
-	{
-		// Update status to let user know options were saved.
-		this.divContainer.setStyle('display','block');
-		this.divContainer.set('html', message + errorSuggestions);
-		window.addEvent('resize',  this.centerError.bind(this));
-		this.centerError();
-	},
+    showError: function(message)
+    {
+        // Update status to let user know options were saved.
+        this.divContainer.setStyle('display','block');
+        this.divContainer.set('html', message);
+        window.addEvent('resize',  this.centerError.bind(this));
+        this.centerError();
+    },
 
-	centerError: function()
-	{
-		var size = this.divContainer.getSize();
-		this.divContainer.setStyle('top', (window.innerHeight - size.y)/2);
-		this.divContainer.setStyle('left', (window.innerWidth - size.x)/2);
-	}
+    centerError: function()
+    {
+        var size = this.divContainer.getSize();
+        this.divContainer.setStyle('top', (window.innerHeight - size.y)/2);
+        this.divContainer.setStyle('left', (window.innerWidth - size.x)/2);
+    }
 
 
 

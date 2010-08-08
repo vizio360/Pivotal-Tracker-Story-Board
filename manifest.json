@@ -1,32 +1,39 @@
 {
-  "name": "Pivotal Story Board",
-  "version": "1.0",
+  "name": "Pivotal Tracker Story Board",
+  "version": "1.0.3",
 
   "description": "Keep an eye on the current iteration!",
-  "icons": { "48": "images/printer48.png",
-             "128": "images/printer128.png"
-           },
+  "icons":
+  {
+          "32": "images/board32.png",
+          "48": "images/board48.png",
+        "128": "images/board128.png"
+  },
+
   "background_page": "background.html",
+
   "page_action":
   {
-    "default_icon": "images/printer48.png",
+    "default_icon": "images/board32.png",
     "default_title": "Story Board"
   },
+
   "options_page": "options.html",
+
   "content_scripts":
   [
       {
-         "matches": ["http://www.pivotaltracker.com/*"],
+         "matches": ["http://www.pivotaltracker.com/projects/*", "https://www.pivotaltracker.com/projects/*"],
          "js": ["scripts/content.js"],
          "run_at": "document_start"
       }
   ],
+
   "permissions":
   [
     "tabs",
     "https://www.pivotaltracker.com/*",
     "http://www.pivotaltracker.com/*"
-
   ]
 }
 

@@ -90,6 +90,14 @@ function onXmlRequestError(xhr)
     if (xhr.responseText != undefined)
         message += xhr.responseText + "<BR>";
     message += "STATUS: "+xhr.status;
+
+    if (xhr.status == 422)
+        message += "<br>Make sure you've set the correct API token for this user. Check it in the <a href='options.html' target='_blank'>options page</a>";
+    else if ((xhr.status == 0))
+        message += "<br>Try and refresh the page!";
+    else
+        message += "<br>Have you set the API Token in the <a href='options.html' target='_blank'>options page</a> of the extension?<br>";
+
     errorDialog.showError(message);
 }
 
@@ -164,7 +172,6 @@ Error!
 <script>
 
 var errorDialog = new ErrorDialog($('error'));
-var errorSuggestions = "<br>Have you set the API Token in the <a href='options.html' target='_blank'>option page</a> of the extension?<br>";
 
 var loader = new Loader($('loader'), 500);
 
@@ -190,7 +197,7 @@ storyBoard.addStoryColumn(deliveredCol);
 
 
 var token = localStorage["storyBoard-X-Tracker-Token"];
-var pivotalClient = new PivotalTrackerAPIClient(token);
+var pivotalClient = new PivotalTrackerAPIClient(token, getURLParam('useHttps'));
 var projectId = getURLParam('projectId');
 pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
 var storiesFilter = "filter=state:unstarted,started,finished,delivered";

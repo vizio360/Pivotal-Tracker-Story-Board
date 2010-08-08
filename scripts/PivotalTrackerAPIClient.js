@@ -46,17 +46,23 @@ var XmlRequest = new Class({
 
 var PivotalTrackerAPIClient = new Class ({
 
-    apiRoot: "http://www.pivotaltracker.com/services/v3/",
+    httpProtocol:"http",
+    httpsProtocol:"https",
+    apiRoot: "://www.pivotaltracker.com/services/v3/",
     token: "",
     xmlHttpRequest:null,
     requestQueue:null,
     isHttpRequestRunning: false,
     currentRequest:null,
 
-    initialize: function(token)
+    initialize: function(token, useHttps)
     {
         this.token = token;
         this.requestQueue = new Array();
+        if (useHttps == "true")
+            this.apiRoot = this.httpsProtocol + this.apiRoot;
+        else
+            this.apiRoot = this.httpProtocol + this.apiRoot;
     },
 
     onRequestSuccess: function(responseText, responseXML)
@@ -128,7 +134,7 @@ var PivotalTrackerAPIClient = new Class ({
         if (this.requestQueue.length > 0)
         {
             var request = this.requestQueue.shift();
-            this.fireRequest(request).delay(500);
+            this.fireRequest.delay(500, this, request);
         }
     },
 
