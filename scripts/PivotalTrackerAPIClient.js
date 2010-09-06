@@ -102,6 +102,15 @@ var PivotalTrackerAPIClient = new Class ({
         this.fireRequest(request);
     },
 
+    getCurrentIterationStories: function(projectId, onRequestStart, onLoad, onError)
+    {
+        var request = new XmlRequest("get", this.apiRoot + "projects/" + projectId + "/iterations/current", true);
+        request.onLoad = onLoad;
+        request.onError = onError;
+        request.onRequestStart = onRequestStart;
+        this.fireRequest(request);
+    },
+
     fireRequest: function(request)
     {
         if (this.isHttpRequestRunning)

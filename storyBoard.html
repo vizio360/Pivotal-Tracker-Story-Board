@@ -107,9 +107,13 @@ function onStoriesLoaded(responseText, responseXML)
     storyBoard.clear();
     var stories = responseXML.getElementsByTagName("story");
     var i = 0;
-    while (i < stories.length)
+    for (var i=0; i < stories.length; i++)
     {
         var story = stories[i];
+        var state = getTextContentForElement(story, "current_state");
+
+        if (state == "accepted" || state == "rejected")
+            continue;
 
         var storyCard = new StoryCard(getTextContentForElement(story, "name"),
                                       getTextContentForElement(story, "current_state"),
@@ -117,7 +121,6 @@ function onStoriesLoaded(responseText, responseXML)
                                       getTextContentForElement(story, "owned_by"),
                                       getTextContentForElement(story, "estimate"));
         storyBoard.addStory(storyCard);
-        i++;
     }
 
     var timeout = localStorage["storyBoard-refreshTimeout"];
@@ -200,8 +203,8 @@ var token = localStorage["storyBoard-X-Tracker-Token"];
 var pivotalClient = new PivotalTrackerAPIClient(token, getURLParam('useHttps'));
 var projectId = getURLParam('projectId');
 pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
-var storiesFilter = "filter=state:unstarted,started,finished,delivered";
-pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
+//var storiesFilter = "filter=state:unstarted,started,finished,delivered";
+pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
 
 </script>
 
