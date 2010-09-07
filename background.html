@@ -27,52 +27,7 @@
 <head>
 
 <script>
-//listener for page request.
-chrome.extension.onRequest.addListener(currentTabRequest);
 
-function currentTabRequest(request, sender, sendResponse)
-{
-    if (request.action == "showIcon")
-    {
-        chrome.pageAction.show(sender.tab.id);
-    }
-
-}
-
-chrome.pageAction.onClicked.addListener(onClicked);
-
-function onClicked(tab)
-{
-    var projectId = getProjectIdFromUrl(tab.url);
-    var useHttps;
-    if (tab.url.indexOf("https") == 0)
-        useHttps = "true";
-    else
-        useHttps = "false";
-
-    chrome.tabs.create({url:"storyBoard.html?projectId="+projectId+"&useHttps="+useHttps});
-}
-
-function getProjectIdFromUrl(url)
-{
-    var str = new String(url);
-    var projects = 'projects/';
-    str = str.substr(str.lastIndexOf(projects) + projects.length);
-
-    //removeing extra chars after the project id
-    if (str.indexOf('/') > -1)
-        str = str.substr(0, str.indexOf('/'));
-
-    //removing params after the project id
-    if (str.indexOf('?') > -1)
-        str = str.substring(0, str.indexOf('?'));
-
-    //removing anchors after the project id
-    if (str.indexOf('#') > -1)
-        str = str.substring(0, str.indexOf('#'));
-
-    return str;
-}
 
 
 </script>
