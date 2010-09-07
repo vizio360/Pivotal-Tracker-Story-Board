@@ -1,0 +1,11 @@
+body {
+    overflow:hidden;
+    line-height:130%;
+    display:block;
+    margin:0px;
+    width:100%;
+    padding:0px;
+    background: #898989 url('../images/bg_main.gif') repeat 0 1px fixed;
+    min-width: 1200px;
+    width:expression(document.body.clientWidth < 1200? "1200px": "auto" );
+}

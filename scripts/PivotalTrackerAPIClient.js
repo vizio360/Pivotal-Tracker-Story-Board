@@ -111,6 +111,15 @@ var PivotalTrackerAPIClient = new Class ({
         this.fireRequest(request);
     },
 
+    getProjects: function(onRequestStart, onLoad, onError)
+    {
+        var request = new XmlRequest("get", this.apiRoot + "projects", true);
+        request.onLoad = onLoad;
+        request.onError = onError;
+        request.onRequestStart = onRequestStart;
+        this.fireRequest(request);
+    },
+
     fireRequest: function(request)
     {
         if (this.isHttpRequestRunning)
