@@ -166,10 +166,8 @@ var StoryCard = new Class({
 		this.divTypeAndPointsContainer.grab(this.divTypeContainer);
 
 		var typeIcon = new Element('img');
-		if (this.type == 'feature')
-			typeIcon.src = 'images/feature_icon.png';
-		else if (this.type == 'chore')
-			typeIcon.src = 'images/chore_icon.png';
+		typeIcon.src = 'images/'+this.type+'_icon.png';
+
 		this.divTypeContainer.grab(typeIcon);
 
 
