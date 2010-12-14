@@ -29,11 +29,13 @@ function save_options()
   delivered = delivered.value;
   localStorage["storyBoard-delivered-label"] = delivered;
 
+
+  var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
+  localStorage["storyBoard-only-current-iteration"] = showOnlyCIUnfinishedStories.checked;
+
   var timeout = document.getElementById("refreshTimeout");
   timeout = timeout.children[timeout.selectedIndex].value;
   localStorage["storyBoard-refreshTimeout"] = timeout;
-
-
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
@@ -61,6 +63,9 @@ function restore_options()
 
     var delivered = document.getElementById("delivered");
     delivered.value = getLocalStorageValue("storyBoard-delivered-label");
+
+	var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
+	showOnlyCIUnfinishedStories.checked = getLocalStorageValue("storyBoard-only-current-iteration") == "true";
 
     var value = getLocalStorageValue("storyBoard-refreshTimeout");
     if (value == "" || value == null || value == undefined)
@@ -117,6 +122,9 @@ function getLocalStorageValue(key)
     <td class="optionCell columnLabel">
         delivered<br><input id="delivered" class="input" value="delivered" size="15">
     </td>
+</tr>
+<tr class="optionRow">
+    <td colspan="4" class="optionCell"><div class="title">Show only unstarted stories for CURRENT ITERATION<br><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></div></td>
 </tr>
 <tr class="optionRow">
     <td colspan="4" class="optionCell"><div class="title">Refresh Timeout</div></td>
