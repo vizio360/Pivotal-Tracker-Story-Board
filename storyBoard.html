@@ -156,8 +156,15 @@ var token = localStorage["storyBoard-X-Tracker-Token"];
 var pivotalClient = new PivotalTrackerAPIClient(token, getURLParam('useHttps'));
 var projectId = getURLParam('projectId');
 pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
-//var storiesFilter = "filter=state:unstarted,started,finished,delivered";
-pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
+
+if (localStorage["storyBoard-only-current-iteration"] == "true")
+{
+	pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
+}else{
+
+	var storiesFilter = "filter=state:unstarted,started,finished,delivered";
+	pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
+}
 
 </script>
 
