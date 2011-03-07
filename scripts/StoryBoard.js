@@ -67,7 +67,15 @@ var StoryBoard = new Class({
 
     addStory: function(story)
     {
-        var col = this.storyCols[story.state];
+        //Hack to avoid null point error
+    	var colType;
+        if (story.state == "unscheduled")
+        	colType = "unstarted";
+        else
+        	colType = story.state;
+        var col = this.storyCols[colType];
+
+
         col.addStory(story);
 
     },
