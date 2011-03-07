@@ -75,6 +75,8 @@ var StoryBoard = new Class({
         	colType = story.state;
         var col = this.storyCols[colType];
 
+        if (col == null)
+        	return;
 
         col.addStory(story);
 

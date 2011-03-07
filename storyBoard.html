@@ -145,22 +145,20 @@ var loader = new Loader($('loader'), 500);
 var storyBoard = new StoryBoard('storyBoardTable');
 
 
-var unstartedCol = new StoryColumn('unstarted');
-unstartedCol.setTitle(storyBoard.getLabelForStoryState("unstarted"));
-storyBoard.addStoryColumn(unstartedCol);
+addColumn('unstarted');
+addColumn('started');
+addColumn('finished');
+addColumn('delivered');
 
-var startedCol = new StoryColumn('started');
-startedCol.setTitle(storyBoard.getLabelForStoryState("started"));
-storyBoard.addStoryColumn(startedCol);
-
-var finishedCol = new StoryColumn('finished');
-finishedCol.setTitle(storyBoard.getLabelForStoryState("finished"));
-storyBoard.addStoryColumn(finishedCol);
-
-var deliveredCol = new StoryColumn('delivered');
-deliveredCol.setTitle(storyBoard.getLabelForStoryState("delivered"));
-storyBoard.addStoryColumn(deliveredCol);
-
+function addColumn(state)
+{
+	var show = localStorage["show-"+state+"-Column"];
+	if (show == "false")
+		return;
+	var col = new StoryColumn(state);
+	col.setTitle(storyBoard.getLabelForStoryState(state));
+	storyBoard.addStoryColumn(col);
+}
 
 var token = localStorage["storyBoard-X-Tracker-Token"];
 var pivotalClient = new PivotalTrackerAPIClient(token, getURLParam('useHttps'));
