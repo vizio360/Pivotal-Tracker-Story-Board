@@ -23,21 +23,11 @@ function save_options()
 
   localStorage["storyBoard-X-Tracker-Token"] = token;
 
-  var unstarted = document.getElementById("unstarted");
-  unstarted = unstarted.value;
-  localStorage["storyBoard-unstarted-label"] = unstarted;
+  saveColumnLabel("unstarted");
+  saveColumnLabel("started");
+  saveColumnLabel("finished");
+  saveColumnLabel("delivered");
 
-  var started = document.getElementById("started");
-  started = started.value;
-  localStorage["storyBoard-started-label"] = started;
-
-  var finished = document.getElementById("finished");
-  finished = finished.value;
-  localStorage["storyBoard-finished-label"] = finished;
-
-  var delivered = document.getElementById("delivered");
-  delivered = delivered.value;
-  localStorage["storyBoard-delivered-label"] = delivered;
 
 
   var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
@@ -56,23 +46,38 @@ function save_options()
 
 }
 
+function setSavedColumnLabel(label)
+{
+	var el = document.getElementById(label);
+    el.value = getLocalStorageValue("storyBoard-"+label+"-label");
+
+	el = document.getElementById("show-"+label+"-Column");
+	var val = getLocalStorageValue("show-"+label+"-Column");
+	el.checked = (val == "true" || val == "");
+
+}
+
+function saveColumnLabel(label)
+{
+	var el = document.getElementById(label);
+	el = el.value;
+	localStorage["storyBoard-"+label+"-label"] = el;
+
+	el = document.getElementById("show-"+label+"-Column");
+	localStorage["show-"+label+"-Column"] = el.checked;
+}
+
 // Restores select box state to saved value from localStorage.
 function restore_options()
 {
     var token = document.getElementById("XTrackerToken");
     token.value = getLocalStorageValue("storyBoard-X-Tracker-Token");
 
-    var unstarted = document.getElementById("unstarted");
-    unstarted.value = getLocalStorageValue("storyBoard-unstarted-label");
+	setSavedColumnLabel("unstarted");
+	setSavedColumnLabel("started");
+	setSavedColumnLabel("finished");
+	setSavedColumnLabel("delivered");
 
-    var started = document.getElementById("started");
-    started.value = getLocalStorageValue("storyBoard-started-label");
-
-    var finished = document.getElementById("finished");
-    finished.value = getLocalStorageValue("storyBoard-finished-label");
-
-    var delivered = document.getElementById("delivered");
-    delivered.value = getLocalStorageValue("storyBoard-delivered-label");
 
 	var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
 	showOnlyCIUnfinishedStories.checked = getLocalStorageValue("storyBoard-only-current-iteration") == "true";
@@ -121,16 +126,20 @@ function getLocalStorageValue(key)
 </tr>
 <tr class="optionRow content">
     <td class="optionCell columnLabel">
-        unstarted<br><input id="unstarted" class="input" value="unstarted" size="15">
+        unstarted<br><input id="unstarted" class="input" value="unstarted" size="15"><br>
+        <input type="checkbox" id="show-unstarted-Column" checked>
     </td>
     <td class="optionCell columnLabel">
-        started<br><input id="started"  class="input" value="started" size="15">
+        started<br><input id="started"  class="input" value="started" size="15"><br>
+        <input type="checkbox" id="show-started-Column" checked>
     </td>
     <td class="optionCell columnLabel">
-        finished<br><input id="finished" class="input" value="finished" size="15">
+        finished<br><input id="finished" class="input" value="finished" size="15"><br>
+        <input type="checkbox" id="show-finished-Column" checked>
     </td>
     <td class="optionCell columnLabel">
-        delivered<br><input id="delivered" class="input" value="delivered" size="15">
+        delivered<br><input id="delivered" class="input" value="delivered" size="15"><br>
+        <input type="checkbox" id="show-delivered-Column" checked>
     </td>
 </tr>
 <tr class="optionRow">
