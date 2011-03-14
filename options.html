@@ -27,6 +27,7 @@ function save_options()
   saveColumnLabel("started");
   saveColumnLabel("finished");
   saveColumnLabel("delivered");
+  saveColumnLabel("accepted");
 
 
 
@@ -39,21 +40,26 @@ function save_options()
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
-  status.style.display = "block";
+  status.style.display = "inline";
   setTimeout(function() {
     status.style.display = "none";
   }, 1000);
 
 }
 
-function setSavedColumnLabel(label)
+function setSavedColumnLabel(label, defaultValue)
 {
 	var el = document.getElementById(label);
     el.value = getLocalStorageValue("storyBoard-"+label+"-label");
 
 	el = document.getElementById("show-"+label+"-Column");
 	var val = getLocalStorageValue("show-"+label+"-Column");
-	el.checked = (val == "true" || val == "");
+	if (defaultValue != undefined)
+		val = defaultValue;
+	console.log("defaultVAlue "+defaultValue);
+	console.log("val "+val);
+	el.checked = (val == "true" || val == "")?true:"";
+	console.log("el.checked "+el.checked);
 
 }
 
@@ -77,6 +83,7 @@ function restore_options()
 	setSavedColumnLabel("started");
 	setSavedColumnLabel("finished");
 	setSavedColumnLabel("delivered");
+	setSavedColumnLabel("accepted", "false");
 
 
 	var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
@@ -113,43 +120,47 @@ function getLocalStorageValue(key)
 <div id="form">
 <table id="optionsTable">
 <tr class="optionRow">
-    <td colspan="4"  class="superTitle">Story Board Options</td>
+    <td colspan="5"  class="superTitle">Story Board Options</td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
+    <td colspan="5" class="optionCell"><div class="title">Pivotal Tracker API Token</div></td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell content"><input id="XTrackerToken" class="input" size="40"><br>You can find it at the bottom of the "MyProfile" page in Pivotal Tracker.</td>
+    <td colspan="5" class="optionCell content"><input id="XTrackerToken" class="input" size="40"><br>You can find it at the bottom of the "MyProfile" page in Pivotal Tracker.</td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell"><div class="title">Story Board Column Labels</div></td>
+    <td colspan="5" class="optionCell"><div class="title">Story Board Column Labels</div></td>
 </tr>
 <tr class="optionRow content">
     <td class="optionCell columnLabel">
         unstarted<br><input id="unstarted" class="input" value="unstarted" size="15"><br>
-        <input type="checkbox" id="show-unstarted-Column" checked>
+        <input type="checkbox" id="show-unstarted-Column">
     </td>
     <td class="optionCell columnLabel">
         started<br><input id="started"  class="input" value="started" size="15"><br>
-        <input type="checkbox" id="show-started-Column" checked>
+        <input type="checkbox" id="show-started-Column">
     </td>
     <td class="optionCell columnLabel">
         finished<br><input id="finished" class="input" value="finished" size="15"><br>
-        <input type="checkbox" id="show-finished-Column" checked>
+        <input type="checkbox" id="show-finished-Column">
     </td>
     <td class="optionCell columnLabel">
         delivered<br><input id="delivered" class="input" value="delivered" size="15"><br>
-        <input type="checkbox" id="show-delivered-Column" checked>
+        <input type="checkbox" id="show-delivered-Column">
+    </td>
+    <td class="optionCell columnLabel">
+        accepted/rejected<br><input id="accepted" class="input" value="accepted/rejected" size="15"><br>
+        <input type="checkbox" id="show-accepted-Column">
     </td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell"><div class="title">Show only unstarted stories for CURRENT ITERATION<br><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></div></td>
+    <td colspan="5" class="optionCell"><div class="title">Show only unstarted stories for CURRENT ITERATION<br><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></div></td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell"><div class="title">Refresh Timeout</div></td>
+    <td colspan="5" class="optionCell"><div class="title">Refresh Timeout</div></td>
 </tr>
 <tr class="optionRow">
-    <td colspan="4" class="optionCell content">
+    <td colspan="5" class="optionCell content">
         <select id="refreshTimeout" class="input">
             <option value="1">1 minute</option>
             <option value="15">15 minutes</option>
@@ -159,7 +170,7 @@ function getLocalStorageValue(key)
     </td>
 </tr>
 <tr class="optionRow">
-    <td  colspan="4" class="optionCell buttons">
+    <td  colspan="5" class="optionCell buttons">
     <button id="save" class="input" onclick="save_options()">Save</button>
 </td>
 </tr>

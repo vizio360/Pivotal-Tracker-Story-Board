@@ -71,9 +71,6 @@ function onStoriesLoaded(responseText, responseXML)
         var story = stories[i];
         var state = getTextContentForElement(story, "current_state");
 
-        if (state == "accepted" || state == "rejected")
-            continue;
-
         var storyCard = new StoryCard(getTextContentForElement(story, "name"),
                                       getTextContentForElement(story, "current_state"),
                                       getTextContentForElement(story, "story_type"),
@@ -149,6 +146,7 @@ addColumn('unstarted');
 addColumn('started');
 addColumn('finished');
 addColumn('delivered');
+addColumn('accepted');
 
 function addColumn(state)
 {
@@ -170,7 +168,7 @@ if (localStorage["storyBoard-only-current-iteration"] == "true")
 	pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
 }else{
 
-	var storiesFilter = "filter=state:unstarted,started,finished,delivered";
+	var storiesFilter = "filter=state:unstarted,started,finished,delivered,accepted,rejected";
 	pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
 }
 

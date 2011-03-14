@@ -134,6 +134,12 @@ var StoryCard = new Class({
 			case "delivered":
 				bg = "#EAFCD7";
 				break;
+			case "accepted":
+				bg = "#83FF00";
+				break;
+			case "rejected":
+				bg = "#FF0000";
+				break;
 
 		}
 		this.divContainer.setStyle('background', bg);
