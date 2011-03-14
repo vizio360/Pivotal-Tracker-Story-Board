@@ -67,12 +67,16 @@ var StoryBoard = new Class({
 
     addStory: function(story)
     {
-        //Hack to avoid null point error
     	var colType;
+    	//putting unscheduled stories in the same column as unstarted ones
         if (story.state == "unscheduled")
         	colType = "unstarted";
+        //putting rejected stories in the same column as accepted ones
+        else if (story.state == "rejected")
+        	colType = "accepted";
         else
         	colType = story.state;
+
         var col = this.storyCols[colType];
 
         if (col == null)
