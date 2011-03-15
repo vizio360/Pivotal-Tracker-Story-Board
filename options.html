@@ -53,13 +53,8 @@ function setSavedColumnLabel(label, defaultValue)
     el.value = getLocalStorageValue("storyBoard-"+label+"-label");
 
 	el = document.getElementById("show-"+label+"-Column");
-	var val = getLocalStorageValue("show-"+label+"-Column");
-	if (defaultValue != undefined)
-		val = defaultValue;
-	console.log("defaultVAlue "+defaultValue);
-	console.log("val "+val);
+	var val = getLocalStorageValue("show-"+label+"-Column", defaultValue);
 	el.checked = (val == "true" || val == "")?true:"";
-	console.log("el.checked "+el.checked);
 
 }
 
@@ -104,11 +99,13 @@ function restore_options()
 
 }
 
-function getLocalStorageValue(key)
+function getLocalStorageValue(key, defaultValue)
 {
+	if (defaultValue == undefined)
+		defaultValue = "";
     var value = localStorage[key];
     if (value == undefined)
-        value = "";
+        value = defaultValue;
     return value;
 }
 
@@ -154,7 +151,7 @@ function getLocalStorageValue(key)
     </td>
 </tr>
 <tr class="optionRow">
-    <td colspan="5" class="optionCell"><div class="title">Show only unstarted stories for CURRENT ITERATION<br><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></div></td>
+    <td colspan="5" class="optionCell"><div class="title">Show only stories for CURRENT ITERATION<br><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></div></td>
 </tr>
 <tr class="optionRow">
     <td colspan="5" class="optionCell"><div class="title">Refresh Timeout</div></td>

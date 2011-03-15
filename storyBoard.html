@@ -83,12 +83,21 @@ function onStoriesLoaded(responseText, responseXML)
     if (timeout == undefined || timeout == "")
         timeout = 15;
 
-    startStoriesTimer.bind(document).delay(timeout * 60 * 1000);
+    getStories.bind(document).delay(timeout * 60 * 1000);
 }
 
-function startStoriesTimer()
+function getStories()
 {
-    pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
+	pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
+
+	if (localStorage["storyBoard-only-current-iteration"] == "true")
+	{
+		pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
+	}else{
+
+		var storiesFilter = "filter=state:unstarted,started,finished,delivered,accepted,rejected";
+		pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
+	}
 }
 
 
@@ -161,16 +170,10 @@ function addColumn(state)
 var token = localStorage["storyBoard-X-Tracker-Token"];
 var pivotalClient = new PivotalTrackerAPIClient(token, getURLParam('useHttps'));
 var projectId = getURLParam('projectId');
-pivotalClient.getProject(projectId, onRequestStart, onProjectLoaded, onXmlRequestError);
 
-if (localStorage["storyBoard-only-current-iteration"] == "true")
-{
-	pivotalClient.getCurrentIterationStories(projectId, onRequestStart, onStoriesLoaded, onXmlRequestError);
-}else{
 
-	var storiesFilter = "filter=state:unstarted,started,finished,delivered,accepted,rejected";
-	pivotalClient.getStories(projectId, storiesFilter, onRequestStart, onStoriesLoaded, onXmlRequestError);
-}
+getStories();
+
 
 </script>
 
