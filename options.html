@@ -45,6 +45,19 @@ function save_options()
     status.style.display = "none";
   }, 1000);
 
+  reloadOpenedStoryBoards();
+}
+
+function reloadOpenedStoryBoards()
+{
+	var views = chrome.extension.getViews();
+	for (var i = 0; i < views.length; i++)
+	{
+		var w = views[i];
+
+		if (w.location.pathname.indexOf("storyBoard.html") > -1)
+			w.location.reload();
+	}
 }
 
 function setSavedColumnLabel(label, defaultValue)
