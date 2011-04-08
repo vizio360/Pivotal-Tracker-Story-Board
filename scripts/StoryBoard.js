@@ -73,7 +73,7 @@ var StoryBoard = new Class({
         	colType = "unstarted";
         //putting rejected stories in the same column as accepted ones
         else if (story.state == "rejected")
-        	colType = "accepted";
+        	colType = "unstarted";
         else
         	colType = story.state;
 
