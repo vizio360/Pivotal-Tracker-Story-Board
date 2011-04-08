@@ -47,43 +47,53 @@
 function onProjectLoaded(responseText, responseXML)
 {
     loader.hideLoader();
-    var project = responseXML.getElementsByTagName("project");
-    var title = $('title');
-    title.set('html',getTextContentForElement(project[0], "name"));
+
+    try
+    {
+    	var project = responseXML.getElementsByTagName("project");
+    	var title = $('title');
+    	title.set('html',getTextContentForElement(project[0], "name"));
+    }catch(err)
+    {
+		showGenericErrorAndRefresh();
+    }
 }
-
-
 
 function onRequestStart()
 {
     loader.showLoader();
 }
 
-
 function onStoriesLoaded(responseText, responseXML)
 {
     loader.hideLoader();
-    storyBoard.clear();
-    var stories = responseXML.getElementsByTagName("story");
-    var i = 0;
-    for (var i=0; i < stories.length; i++)
+    try
     {
-        var story = stories[i];
-        var state = getTextContentForElement(story, "current_state");
+	    storyBoard.clear();
+	    var stories = responseXML.getElementsByTagName("story");
+	    var i = 0;
+	    for (var i=0; i < stories.length; i++)
+	    {
+	        var story = stories[i];
+	        var state = getTextContentForElement(story, "current_state");
 
-        var storyCard = new StoryCard(getTextContentForElement(story, "name"),
-                                      getTextContentForElement(story, "current_state"),
-                                      getTextContentForElement(story, "story_type"),
-                                      getTextContentForElement(story, "owned_by"),
-                                      getTextContentForElement(story, "estimate"));
-        storyBoard.addStory(storyCard);
+	        var storyCard = new StoryCard(getTextContentForElement(story, "name"),
+	                                      getTextContentForElement(story, "current_state"),
+	                                      getTextContentForElement(story, "story_type"),
+	                                      getTextContentForElement(story, "owned_by"),
+	                                      getTextContentForElement(story, "estimate"));
+	        storyBoard.addStory(storyCard);
+	    }
+
+	    var timeout = localStorage["storyBoard-refreshTimeout"];
+	    if (timeout == undefined || timeout == "")
+	        timeout = 15;
+
+	    getStories.bind(document).delay(timeout * 60 * 1000);
+    }catch(err)
+    {
+    	showGenericErrorAndRefresh();
     }
-
-    var timeout = localStorage["storyBoard-refreshTimeout"];
-    if (timeout == undefined || timeout == "")
-        timeout = 15;
-
-    getStories.bind(document).delay(timeout * 60 * 1000);
 }
 
 function getStories()
@@ -106,11 +116,6 @@ function getStories()
 
 </head>
 <body>
-
-
-<img id="chore" src="images/chore_icon.png" style="display:none">
-<img id="feature" src="images/feature_icon.png"  style="display:none">
-
 
 
 <div id="title">

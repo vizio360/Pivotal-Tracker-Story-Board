@@ -45,12 +45,30 @@ function onXmlRequestError(xhr)
     message += "STATUS: "+xhr.status;
 
     if (xhr.status == 422)
+    {
         message += "<br>Make sure you've set the correct API token for this user. Check it in the <a href='options.html' target='PivotalTrackerStoryBoardOptions'>options page</a>";
+    }
     else if ((xhr.status == 0))
-        message += "<br>Try and refresh the page!";
+    {
+        showGenericErrorAndRefresh();
+        return;
+    }
     else
+    {
         message += "<br>Have you set the API Token in the <a href='options.html' target='PivotalTrackerStoryBoardOptions'>options page</a> of the extension?<br>";
-
+    }
     errorDialog.showError(message);
 }
+
+function showGenericErrorAndRefresh()
+{
+   	errorDialog.showError('OOPS!! Something went wrong!<BR>the page will refresh in 30 seconds');
+   	refreshPage.delay(30000);
+}
+
+function refreshPage()
+{
+	window.location.reload();
+}
+
 
