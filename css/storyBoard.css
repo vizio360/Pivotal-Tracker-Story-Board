@@ -14,6 +14,24 @@
     line-height: 40px;
 
 }
+#reportABug {
+    display:block;
+    position:absolute;
+	top: 5px;
+    width:100%;
+    margin:0px auto;
+    padding:0px;
+    text-align:right;
+    color: #FFFFFF;
+    font-family: Courier New, Verdana;
+    text-align: right;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+
 
 #footer {
     background: #7ec3e5;
