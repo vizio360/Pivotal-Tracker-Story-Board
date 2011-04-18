@@ -187,6 +187,21 @@ function getLocalStorageValue(key, defaultValue)
     <td  colspan="5" class="optionCell buttons">
     <button id="save" class="input" onclick="save_options()">Save</button>
 </td>
+<tr class="optionRow">
+    <td  colspan="5" class="optionCell content"><br/>
+    You could at least buy me a coffee ;)
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+<input type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_GB/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+</td>
+<tr class="optionRow">
+    <td  colspan="5" class="optionCell buttons">
+</td>
 </tr>
 </table>
 <div id="status">
