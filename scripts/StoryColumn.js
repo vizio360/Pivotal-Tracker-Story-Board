@@ -26,6 +26,8 @@ var StoryColumn = new Class({
     //properties
 	title: "",
 
+	numberOfStories: 0,
+
 	divContainer: null,
 
 	divTitle: null,
@@ -112,6 +114,7 @@ var StoryColumn = new Class({
     	this.addStoriesContainerDiv();
     	document.addEvent('domready',  this.onWindowResize.bind(this));
     	window.addEvent('resize', this.onWindowResize.bind(this));
+    	this.numberOfStories = 0;
 
 
 	},
@@ -120,9 +123,13 @@ var StoryColumn = new Class({
 	setTitle: function(newTitle)
 	{
 		this.title = newTitle;
-		if (this.divTitle != null)
-			this.divTitle.set('html', this.title);
+		this.updateTitle();
+	},
 
+	updateTitle: function()
+	{
+		if (this.divTitle != null)
+			this.divTitle.set('html', this.title + " ("+this.numberOfStories+")");
 	},
 
 	createColumnDiv: function()
@@ -139,7 +146,7 @@ var StoryColumn = new Class({
 	{
 		this.divTitle = new Element('div');
 		this.divTitle.setStyles(this.divTitleStyle);
-		this.divTitle.set('html', this.title);
+		this.setTitle(this.title);
 		this.divContainer.grab(this.divTitle);
 	},
 
@@ -157,6 +164,8 @@ var StoryColumn = new Class({
 	addStory: function(story)
 	{
 		this.divStoriesContainer.grab(story.getContent());
+		this.numberOfStories++;
+		this.updateTitle();
 	},
 
 	onWindowResize: function ()
@@ -172,6 +181,8 @@ var StoryColumn = new Class({
 	clear: function()
 	{
 		this.divStoriesContainer.empty();
+		this.numberOfStories = 0;
+		this.updateTitle();
 	},
 
 	getContent: function()
