@@ -82,6 +82,8 @@ function onStoriesLoaded(responseText, responseXML)
 	                                      getTextContentForElement(story, "story_type"),
 	                                      getTextContentForElement(story, "owned_by"),
 	                                      getTextContentForElement(story, "estimate"));
+			if (doNotShowStory(storyCard))
+				continue;
 	        storyBoard.addStory(storyCard);
 	    }
 
@@ -94,6 +96,22 @@ function onStoriesLoaded(responseText, responseXML)
     {
     	showGenericErrorAndRefresh();
     }
+}
+
+function doNotShowStory(storyCard)
+{
+	switch (storyCard.type)
+	{
+		case "chore":
+			return localStorage["storyBoard-show-chores"] != "true";
+			break;
+		case "bug":
+			return localStorage["storyBoard-show-bugs"] != "true";
+			break;
+		case "release":
+			return localStorage["storyBoard-show-releases"] != "true";
+			break;
+	}
 }
 
 function getStories()

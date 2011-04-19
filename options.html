@@ -29,10 +29,11 @@ function save_options()
   saveColumnLabel("delivered");
   saveColumnLabel("accepted");
 
+  saveCheckboxValue("storyBoard-only-current-iteration");
+  saveCheckboxValue("storyBoard-show-chores");
+  saveCheckboxValue("storyBoard-show-bugs");
+  saveCheckboxValue("storyBoard-show-releases");
 
-
-  var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
-  localStorage["storyBoard-only-current-iteration"] = showOnlyCIUnfinishedStories.checked;
 
   var timeout = document.getElementById("refreshTimeout");
   timeout = timeout.children[timeout.selectedIndex].value;
@@ -48,6 +49,12 @@ function save_options()
   reloadOpenedStoryBoards();
 }
 
+function saveCheckboxValue(id)
+{
+	var checkbox = document.getElementById(id);
+	localStorage[id] = checkbox.checked;
+}
+
 function reloadOpenedStoryBoards()
 {
 	var views = chrome.extension.getViews();
@@ -60,16 +67,9 @@ function reloadOpenedStoryBoards()
 	}
 }
 
-function setSavedColumnLabel(label, defaultValue)
-{
-	var el = document.getElementById(label);
-    el.value = getLocalStorageValue("storyBoard-"+label+"-label");
 
-	el = document.getElementById("show-"+label+"-Column");
-	var val = getLocalStorageValue("show-"+label+"-Column", defaultValue);
-	el.checked = (val == "true" || val == "")?true:"";
 
-}
+
 
 function saveColumnLabel(label)
 {
@@ -93,9 +93,11 @@ function restore_options()
 	setSavedColumnLabel("delivered");
 	setSavedColumnLabel("accepted", "false");
 
+	setCheckboxValue("storyBoard-only-current-iteration", "false");
+	setCheckboxValue("storyBoard-show-chores", "true");
+	setCheckboxValue("storyBoard-show-bugs", "true");
+	setCheckboxValue("storyBoard-show-releases", "true");
 
-	var showOnlyCIUnfinishedStories = document.getElementById("showOnlyCurrentIterationUnstartedStories");
-	showOnlyCIUnfinishedStories.checked = getLocalStorageValue("storyBoard-only-current-iteration") == "true";
 
     var value = getLocalStorageValue("storyBoard-refreshTimeout");
     if (value == "" || value == null || value == undefined)
@@ -110,6 +112,21 @@ function restore_options()
         }
     }
 
+}
+
+function setSavedColumnLabel(label, defaultValue)
+{
+	var el = document.getElementById(label);
+    el.value = getLocalStorageValue("storyBoard-"+label+"-label");
+
+    setCheckboxValue("show-"+label+"-Column", defaultValue);
+}
+
+function setCheckboxValue(id, defaultValue)
+{
+	var checkbox = document.getElementById(id);
+	var val = getLocalStorageValue(id, defaultValue);
+	checkbox.checked = (val == "true" || val == "")?true:"";
 }
 
 function getLocalStorageValue(key, defaultValue)
@@ -164,10 +181,20 @@ function getLocalStorageValue(key, defaultValue)
     </td>
 </tr>
 <tr class="optionRow">
+    <td colspan="5" class="optionCell"><div class="title"></div></td>
+</tr>
+<tr class="optionRow content">
+    <td colspan="5" class="optionCell">
+    <input type="checkbox" id="storyBoard-show-chores">Show Chores
+    <input type="checkbox" id="storyBoard-show-bugs">Show Bugs
+    <input type="checkbox" id="storyBoard-show-releases">Show Releases
+    </td>
+</tr>
+<tr class="optionRow">
     <td colspan="5" class="optionCell"><div class="title">Show only unstarted stories for CURRENT ITERATION</div></td>
 </tr>
 <tr class="optionRow content">
-    <td colspan="5" class="optionCell"><input type="checkbox" id="showOnlyCurrentIterationUnstartedStories"></td>
+    <td colspan="5" class="optionCell"><input type="checkbox" id="storyBoard-only-current-iteration"></td>
 </tr>
 
 <tr class="optionRow">
