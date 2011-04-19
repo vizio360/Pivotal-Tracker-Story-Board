@@ -82,7 +82,7 @@ function onStoriesLoaded(responseText, responseXML)
 	                                      getTextContentForElement(story, "story_type"),
 	                                      getTextContentForElement(story, "owned_by"),
 	                                      getTextContentForElement(story, "estimate"));
-			if (doNotShowStory(storyCard))
+			if (!doShowStory(storyCard))
 				continue;
 	        storyBoard.addStory(storyCard);
 	    }
@@ -98,20 +98,25 @@ function onStoriesLoaded(responseText, responseXML)
     }
 }
 
-function doNotShowStory(storyCard)
+function doShowStory(storyCard)
 {
+	var value = true;
 	switch (storyCard.type)
 	{
 		case "chore":
-			return localStorage["storyBoard-show-chores"] != "true";
+			value = localStorage["storyBoard-show-chores"];
+			value = value == "true" || value == undefined;
 			break;
 		case "bug":
-			return localStorage["storyBoard-show-bugs"] != "true";
+			value = localStorage["storyBoard-show-bugs"];
+			value = value == "true" || value == undefined;
 			break;
 		case "release":
-			return localStorage["storyBoard-show-releases"] != "true";
+			value = localStorage["storyBoard-show-releases"];
+			value = value == "true" || value == undefined;
 			break;
 	}
+	return value;
 }
 
 function getStories()
