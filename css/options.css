@@ -1,9 +1,9 @@
 #form {
-	top:120px;
+
 	margin-left:auto;
 	margin-right:auto;
-	margin-top: 0px;
-	margin-bottom:0px;
+	margin-top: 20px;
+	margin-bottom:20px;
 	position:relative;
 	background: #7ec3e5;
 	display:block;
@@ -94,7 +94,7 @@
 	text-align: center;
 }
 body {
-	overflow:hidden;
+	overflow:scroll;
 	line-height:130%;
 	display:block;
 	margin:0px;
