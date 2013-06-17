@@ -1,6 +1,7 @@
 {
   "name": "Pivotal Tracker Story Board",
-  "version": "2.1.5",
+  "version": "3.0.0",
+  "manifest_version": 2,
 
   "description": "Keep an eye on the current iteration!",
   "icons":
@@ -10,16 +11,20 @@
         "128": "images/board128.png"
   },
 
-  "background_page": "background.html",
+  "background": {
+      "page": "background.html"
+  },
 
   "browser_action":
   {
     "default_icon": "images/board32.png",
     "default_title": "Pivotal Tracker Story Board",
-    "popup": "selectProject.html"
+    "default_popup": "selectProject.html"
   },
 
   "options_page": "options.html",
+
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
 
   "permissions":
   [

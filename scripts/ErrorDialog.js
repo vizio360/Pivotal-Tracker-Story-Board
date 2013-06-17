@@ -47,6 +47,4 @@ var ErrorDialog = new Class({
         this.divContainer.setStyle('left', (window.innerWidth - size.x)/2);
     }
 
-
-
 });
